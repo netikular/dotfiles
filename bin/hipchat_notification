@@ -1,0 +1,31 @@
+#!/usr/bin/ruby
+require 'net/http'
+require 'uri'
+require 'json'
+
+# Get a version 2 api key from the user interface
+# https://isdmdg.hipchat.com/account/api
+API_KEY='cGW398wCB9LqJ0Nivd5G2uofDeCj0maIAUUOuE09'
+
+# Use to output room information
+# You will need to use it to get the id of the room you want to post into
+
+=begin
+uri = URI.parse("https://api.hipchat.com/v2/room")
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+req =  Net::HTTP::Get.new(uri)
+req['Authorization'] = "Bearer #{API_KEY}"
+res = http.request(req)
+puts "ID\tName"
+JSON.parse(res.body)['items'].each do |room|
+  puts %{#{room['id']}\t#{room['name']}}
+end
+=end
+
+uri = URI.parse("https://api.hipchat.com/v2/room/342613/notification") # OSS DEV
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+req = Net::HTTP::Post.new(uri.path, { 'Authorization' => "Bearer #{API_KEY}", 'Content-Type' => 'application/json' } ) 
+req.body = %{{ "message": "#{ARGV[0]}", "color": "green"}}
+res = http.request(req)

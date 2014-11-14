@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+require 'net/http'
+require 'net/https'
+require 'yaml'
+require 'pp'
+HEADERS = {'Accept'=> "text/yaml"}
+
+
+@pw, host, env = ARGV
+
+def get_yaml(uri)
+  uri = URI.parse(uri)
+  request = Net::HTTP::Get.new(uri.path)
+  request.basic_auth 'osadmin', @pw
+  request['Accept'] = 'text/yaml'
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+
+  response = http.start do |http|
+    http.request(request)
+  end
+  response.body
+end
+
+body = get_yaml("https://#{host}.#{env}:4343/nodes")
+
+nodes_from_dashboard = YAML::load(body)
+nodes_from_dashboard.each do |node|
+  node_name = node["attributes"]["name"]
+  print node_name, " "
+end
+
+

@@ -28,6 +28,18 @@ You can safely run `rcup` multiple times to update:
 
     rcup
 
+VIM
+-------
+
+After you have run the rcup command you will need to build Command-T
+
+    cd $HOME/.vim/bundle/Command-T/ruby/command-t
+    rvm use system # if you are using rvm
+    ruby extconf.rb
+    make
+
+That should do it for you, you now have lightning fast file completion
+
 Credits
 -------
 

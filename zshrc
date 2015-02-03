@@ -39,7 +39,7 @@ export PATH="$HOME/bin:$PATH"
 export PATH="$PATH:$HOME/bin/packer.io"
 
 # mkdir .git/safe in the root of repositories you trust
-export PATH=".git/safe/../../bin:$PATH"
+#export PATH=".git/safe/../../bin:$PATH"
 
 #home brew github api key
 export HOMEBREW_GITHUB_API_TOKEN=afbc42fd3b10bca29150c79b59a0b695bda26050
@@ -73,6 +73,8 @@ bindkey -s "^T" "^[Isudo ^[A" # "t" for "toughguy"
 alias poj="cd ~/Projects/OfficeSpace/java_officespace"
 alias ppm="cd ~/Projects/vagrant"
 alias pdr="cd ~/Projects/iabri/drum" 
+alias pdar="cd ~/Projects/iabri/drum_admin"
+alias prope="cd ~/Projects/iabri/rope"
 alias poh="cd ~/Projects/OfficeSpace/huddle"
 alias pfk="cd ~/Projects/forekast/kiwi"
 alias pob="cd ~/Projects/EGM/blinc"
@@ -88,8 +90,12 @@ ssh-add ~/.ssh/id_rsa
 
 
 #Rubocop
-alias rubo='rubocop -R -D .'
-alias rubox='rubocop -a -R -D .'
+alias rubo_all='rubocop -R -D .'
+alias rubox_all='rubocop -a -R -D .'
+alias rubo="git status --porcelain | egrep '((rb)|(rake))' | awk '{print \$2}' | xargs rubocop -R -D"
+alias rubox="git status --porcelain | egrep '((rb)|(rake))' | awk '{print \$2}' | xargs rubocop -a -R -D"
+
+
 
 #newline helpers
 alias fixnl="sed -i '' -e '\$a\' "
@@ -110,10 +116,14 @@ alias b='bundle'
 alias rk='.git/safe/../../bin/rake'
 alias s='.git/safe/../../bin/rspec'
 alias r='.git/safe/../../bin/rails'
-alias spring='.git/safe/../../bin/spring'
+alias fack='file ./ | ag '
 
-#git aliases
-alias gfp="g fetch -p"
+#Todo aliases
+alias m=memo
+alias ma="memo -a"
+
+#nvim? is it good?
+#alias vim=nvim
 
 #Helpful startup stuff
 alias postgres.start="postgres -D /usr/local/var/postgres >logfile 2>&1 </dev/null &"

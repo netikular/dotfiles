@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# Find and replace by a given list of files.
+#
+# replace foo bar **/*.rb
+# Originally Copied from: 
+# https://github.com/thoughtbot/dotfiles/blob/fa18537afd16c7909bec039ccd17f1c11d46f758/bin/replace#L1
+
+find_this=$1
+shift
+replace_with=$1
+shift
+
+ag -l $find_this $* | xargs sed -i '' "s/$find_this/$replace_with/g"

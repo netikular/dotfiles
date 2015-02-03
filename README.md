@@ -40,6 +40,11 @@ After you have run the rcup command you will need to build Command-T
 
 That should do it for you, you now have lightning fast file completion
 
+Memo
+----
+A note taking app that lives on the command line.
+http://www.getmemo.org/
+
 Credits
 -------
 

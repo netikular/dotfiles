@@ -61,7 +61,11 @@ set wildmode=longest,list
 set wildmenu
 let mapleader=","
 
-set wildignore+=*.o,*.obj,.git,tmp/cache/assets,tmp,vendor/assets/bower_components,coverage
+"Enable project specific vimrc files
+set exrc
+set secure
+
+set wildignore+=*.o,*.obj,.git,tmp/cache/assets,tmp,vendor/assets/bower_components,coverage,paper_clip
 
 " kill the scroll bars
 " when using full screen seeing them flash can be troubling.
@@ -91,9 +95,16 @@ au BufRead,BufNewFile *.ejs   setfiletype html
 """"""""
 " Command-T helpers
 """"""""
-nmap <Leader>T :CommandTFlush<CR>
-let g:CommandTCancelMap=['<ESC>', '<C-c>']
+" nmap <Leader>T :CommandTFlush<CR>
+" nmap <Leader>t :CommandT<CR>
+" let g:CommandTCancelMap=['<ESC>', '<C-c>']
 
+nmap <Leader>t :CtrlP<CR>
+let g:ctrlp_prompt_mappings = {
+  \ 'PrtClearCache()':      ['<c-r>'],
+  \ }
+nmap <Leader>T :call PrtClearCache()<cr>
+let g:ctrlp_use_caching=1
 """""
 " Misc key maps
 """""
@@ -179,8 +190,6 @@ au BufNewFile,BufReadPost *.json setl shiftwidth=2 expandtab tabstop=2 softtabst
 """""
 autocmd BufNewFile,BufRead *.java set ft=java
 au BufNewFile,BufReadPost *.java setl shiftwidth=4 expandtab tabstop=4 softtabstop=4 tw=80
-
-
 """""
 " Puppet
 " Helps with tags identifying scoped identifiers

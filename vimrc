@@ -25,6 +25,11 @@ set hlsearch
 set ignorecase smartcase
 " highlight current line
 set cursorline
+" highlight 80th column
+if (exists('+colorcolumn'))
+    set colorcolumn=80
+    highlight ColorColumn ctermbg=9
+endif
 " who can code with out them
 set nu
 set cmdheight=2

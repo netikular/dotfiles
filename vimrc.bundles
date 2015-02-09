@@ -18,6 +18,7 @@ Plugin 'gmarik/Vundle.vim'
 " Plugin 'vim-scripts/matchit.zip'
 
 Plugin 'kien/ctrlp.vim.git'
+Plugin 'bronson/vim-trailing-whitespace'
 Plugin 'vim-scripts/tComment'
 Plugin 'vim-scripts/ctags.vim'
 Plugin 'floobits/floobits-neovim'

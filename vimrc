@@ -26,10 +26,10 @@ set ignorecase smartcase
 " highlight current line
 set cursorline
 " highlight 80th column
-if (exists('+colorcolumn'))
-    set colorcolumn=80
-    highlight ColorColumn ctermbg=9
-endif
+" if (exists('+colorcolumn'))
+"     set colorcolumn=80
+"     highlight ColorColumn ctermbg=9
+" endif
 " who can code with out them
 set nu
 set cmdheight=2
@@ -200,3 +200,9 @@ au BufNewFile,BufReadPost *.java setl shiftwidth=4 expandtab tabstop=4 softtabst
 " Helps with tags identifying scoped identifiers
 """""
 set iskeyword=-,:,@,48-57,_,192-255
+
+"""""
+" Markdown
+" Tim Pope suggestions
+"""""
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown

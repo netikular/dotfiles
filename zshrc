@@ -72,7 +72,7 @@ bindkey -s "^T" "^[Isudo ^[A" # "t" for "toughguy"
 #Projects
 alias poj="cd ~/Projects/OfficeSpace/java_officespace"
 alias ppm="cd ~/Projects/vagrant"
-alias pdr="cd ~/Projects/iabri/drum" 
+alias pdr="cd ~/Projects/iabri/drum"
 alias pdar="cd ~/Projects/iabri/drum_admin"
 alias prope="cd ~/Projects/iabri/rope"
 alias poh="cd ~/Projects/OfficeSpace/huddle"
@@ -80,7 +80,7 @@ alias pfk="cd ~/Projects/forekast/kiwi"
 alias pob="cd ~/Projects/EGM/blinc"
 alias pok="cd ~/Projects/OfficeSpace/kit"
 alias pot="cd ~/Projects/OfficeSpace/task_manager"
-alias pef="cd ~/Projects/paradem/edesio/edesio-foundation"
+alias ptr="cd ~/Projects/paradem/edesio/trail-app"
 alias pph="cd ~/Projects/paradem/paradem-home"
 alias pp="cd ~/Projects/paradem/"
 
@@ -127,6 +127,7 @@ alias ma="memo -a"
 
 #Helpful startup stuff
 alias postgres.start="postgres -D /usr/local/var/postgres >logfile 2>&1 </dev/null &"
+alias redis.start="redis-server /usr/local/etc/redis.conf"
 
 # history settings
 setopt hist_ignore_all_dups inc_append_history

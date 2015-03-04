@@ -41,9 +41,6 @@ export PATH="$PATH:$HOME/bin/packer.io"
 # mkdir .git/safe in the root of repositories you trust
 #export PATH=".git/safe/../../bin:$PATH"
 
-#home brew github api key
-export HOMEBREW_GITHUB_API_TOKEN=afbc42fd3b10bca29150c79b59a0b695bda26050
-
 #Vagrant
 export VAGRANT_DEFAULT_PROVIDER=vmware_fusion
 

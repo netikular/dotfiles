@@ -9,7 +9,7 @@ let g:coffeeCheckHighlightErrorLine = 1
 """""
 " Basic editing configuraiton
 """""
-set modeline
+"set modeline
 set nocompatible
 set hidden
 set history=1000
@@ -32,7 +32,8 @@ set cursorline
 " endif
 " who can code with out them
 set nu
-set cmdheight=2
+set rnu
+set cmdheight=1
 set switchbuf=useopen
 "Setting winheight to be large after vim is started to avoid errors
 au VimEnter * set winheight=999
@@ -53,6 +54,7 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set backspace=indent,eol,start
 " display incomplete commands
 set showcmd
+set noshowmode
 " Enable syntax highlighting
 syntax on
 " Enable file type detection.
@@ -70,7 +72,7 @@ let mapleader=","
 set exrc
 set secure
 
-set wildignore+=*.o,*.obj,.git,tmp/cache/assets,tmp,vendor/assets/bower_components,coverage,paper_clip
+set wildignore+=*.o,*.obj,.git,tmp/cache/assets,tmp,*/vendor/assets/bower_components/*,coverage,paper_clip,tiles/*
 
 " kill the scroll bars
 " when using full screen seeing them flash can be troubling.
@@ -90,7 +92,7 @@ set background=dark
 """""
 " STATUS LINE
 """""
-set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
+"set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 """""
 " File types
@@ -175,6 +177,10 @@ au BufNewFile,BufReadPost *.css setl shiftwidth=2 expandtab tabstop=2 softtabsto
 """""
 au BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab tabstop=2 softtabstop=2
 
+"""""
+" ES6
+"""""
+autocmd BufRead,BufNewFile *.es6 setfiletype javascript
 """""
 " Ruby
 """""

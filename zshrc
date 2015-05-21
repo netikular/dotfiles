@@ -77,7 +77,7 @@ alias pfk="cd ~/Projects/forekast/kiwi"
 alias pob="cd ~/Projects/EGM/blinc"
 alias pok="cd ~/Projects/OfficeSpace/kit"
 alias pot="cd ~/Projects/OfficeSpace/task_manager"
-alias ptr="cd ~/Projects/paradem/edesio/trail-app"
+alias ptr="cd ~/Projects/trailsuite/trail-app"
 alias pph="cd ~/Projects/paradem/paradem-home"
 alias pp="cd ~/Projects/paradem/"
 
@@ -89,8 +89,8 @@ ssh-add ~/.ssh/id_rsa
 #Rubocop
 alias rubo_all='rubocop -R -D .'
 alias rubox_all='rubocop -a -R -D .'
-alias rubo="git status --porcelain | egrep '((rb)|(rake))' | awk '{print \$2}' | xargs rubocop -R -D"
-alias rubox="git status --porcelain | egrep '((rb)|(rake))' | awk '{print \$2}' | xargs rubocop -a -R -D"
+alias rubo="git status --porcelain | egrep '((rb)|(rake))' | awk '{print \$2}' | grep -v schema.rb | xargs rubocop -R -D"
+alias rubox="git status --porcelain | egrep '((rb)|(rake))' | awk '{print \$2}' | grep -v schema.rb | xargs rubocop -a -R -D"
 
 
 
@@ -123,8 +123,9 @@ alias ma="memo -a"
 #alias vim=nvim
 
 #Helpful startup stuff
-alias postgres.start="postgres -D /usr/local/var/postgres >logfile 2>&1 </dev/null &"
+alias postgres.start="postgres -D /usr/local/var/postgres >/tmp/postgres_logfile 2>&1 </dev/null &"
 alias redis.start="redis-server /usr/local/etc/redis.conf"
+alias elasticsearch.start="elasticsearch --config=/usr/local/opt/elasticsearch/config/elasticsearch.yml"
 
 # history settings
 setopt hist_ignore_all_dups inc_append_history

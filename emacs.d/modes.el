@@ -18,8 +18,8 @@
 ;; erlang -- Note: we use the one that comes with brew,
 ;;           it's more up-to-date then
 ;;        -- then the one that is (currently?) on marmalade.
-(add-to-list 'load-path "~/.emacs.d/erlang-mode")
-(require 'erlang-start)
+;; (add-to-list 'load-path "~/.emacs.d/erlang-mode")
+;; (require 'erlang-start)
 
 ;; expand-region
 (require 'expand-region)

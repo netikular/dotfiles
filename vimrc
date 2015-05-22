@@ -180,7 +180,8 @@ au BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab tabstop=2 softtab
 """""
 " ES6
 """""
-autocmd BufRead,BufNewFile *.es6 setfiletype javascript
+autocmd BufNewFile,BufRead *.es6 let b:jsx_ext_found = 1
+au BufNewFile,BufRead *.es6 setf javascript
 """""
 " Ruby
 """""

@@ -44,6 +44,7 @@
   l = "!source ~/.githelpers && pretty_git_log"
   la = !git l --all
   lg = log --color --graph --pretty=format:'%C(yellow)%h%Creset %Cgreen(%cr)%C(bold blue) <%an> %Creset %C(red)%d%Creset %s' --abbrev-commit
+  bd = branch -d
 
 [merge]
   tool = vimdiff
@@ -51,3 +52,7 @@
   default = simple
 [include]
   path = ~/.gitconfig.local
+[core]
+	excludesfile = ~/.gitignore
+[credential]
+	helper = osxkeychain

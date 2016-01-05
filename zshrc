@@ -25,18 +25,17 @@ fpath=(~/.zsh/completion $fpath)
 autoload -U compinit
 compinit
 
-export VISUAL=vim
+export VISUAL="emacsclient -t -nw "
 export EDITOR=$VISUAL
-
-# RVM configuration
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 # Add paths that should have been there by default
 # putting /usr/local/bin first so that brew overrides system
 export PATH=/usr/local/bin:$PATH
 export PATH="$HOME/bin:$PATH"
 export PATH="$PATH:$HOME/bin/packer.io"
+
+# rbenv integration
+eval "$(rbenv init -)"
 
 # mkdir .git/safe in the root of repositories you trust
 #export PATH=".git/safe/../../bin:$PATH"
@@ -80,6 +79,7 @@ alias pot="cd ~/Projects/OfficeSpace/task_manager"
 alias ptr="cd ~/Projects/trailsuite/trail-app"
 alias pph="cd ~/Projects/paradem/paradem-home"
 alias pp="cd ~/Projects/paradem/"
+alias vim="TERM=xterm-256color vim"
 
 #Add Keys
 #ssh-add ~/.ssh/cloverengine.pem
@@ -89,8 +89,8 @@ ssh-add ~/.ssh/id_rsa
 #Rubocop
 alias rubo_all='rubocop -R -D .'
 alias rubox_all='rubocop -a -R -D .'
-alias rubo="git status --porcelain | egrep '((rb)|(rake))' | awk '{print \$2}' | grep -v schema.rb | xargs rubocop -R -D"
-alias rubox="git status --porcelain | egrep '((rb)|(rake))' | awk '{print \$2}' | grep -v schema.rb | xargs rubocop -a -R -D"
+alias rubo="git status --porcelain | egrep '((\\.rb)|(\\.rake))' | awk '{print \$2}' | grep -v schema.rb | xargs rubocop -R -D"
+alias rubox="git status --porcelain | egrep '((\\.rb)|(\\.rake))' | awk '{print \$2}' | grep -v schema.rb | xargs rubocop -a -R -D"
 
 
 
@@ -113,7 +113,7 @@ alias b='bundle'
 alias rk='.git/safe/../../bin/rake'
 alias s='.git/safe/../../bin/rspec'
 alias r='.git/safe/../../bin/rails'
-alias fack='file ./ | ag '
+alias fack='find ./ | ag '
 
 #Todo aliases
 alias m=memo
@@ -123,7 +123,7 @@ alias ma="memo -a"
 #alias vim=nvim
 
 #Helpful startup stuff
-alias postgres.start="postgres -D /usr/local/var/postgres >/tmp/postgres_logfile 2>&1 </dev/null &"
+alias postgres.start="postgres -D /usr/local/var/postgres >/tmp/postgres_logfile 2>&1 </dev/null "
 alias redis.start="redis-server /usr/local/etc/redis.conf"
 alias elasticsearch.start="elasticsearch --config=/usr/local/opt/elasticsearch/config/elasticsearch.yml"
 

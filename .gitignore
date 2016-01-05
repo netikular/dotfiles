@@ -1,2 +1,24 @@
+# Vim files
 vim/bundle/
+
+# Binaries
 bin/exercism
+bin/ngrok
+bin/project_path
+
+# Fish generated files or config
+config/fish/fish_history
+config/fish/fish_read_history
+config/fish/fishd.*
+
+# Emacs generated files.
+emacs.d/backups/!*
+emacs.d/elpa
+emacs.d/auto-save-list/.saves*
+emacs.d/autosaves/#!*
+projectile-bookmarks.eld
+projectile.cache
+saveplace
+
+# Random
+.DS_Store

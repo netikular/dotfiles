@@ -5,7 +5,6 @@ require 'yaml'
 require 'pp'
 HEADERS = {'Accept'=> "text/yaml"}
 
-
 @pw, host, env = ARGV
 
 def get_yaml(uri)
@@ -22,12 +21,32 @@ def get_yaml(uri)
   response.body
 end
 
-body = get_yaml("https://#{host}.#{env}:4343/nodes")
+def cache_file(file_name, host, env)
+  body = get_yaml("https://#{host}.#{env}:4343/nodes")
 
-nodes_from_dashboard = YAML::load(body)
-nodes_from_dashboard.each do |node|
-  node_name = node["attributes"]["name"]
-  print node_name, " "
+  File.open(file_name, "w") do |file|
+    nodes_from_dashboard = YAML::load(body)
+    nodes = nodes_from_dashboard.map { |node| node["attributes"]["name"] }
+    file.print nodes.join(" ")
+  end
 end
 
+file_name = "/tmp/#{host}.#{env}"
 
+if File.exists? file_name
+  time = File.stat(file_name).mtime
+  if Time.now - time > 86400
+    cache_file(file_name, host,env)
+  end
+else
+  cache_file(file_name, host,env)
+end
+
+print `cat #{file_name}`
+=begin
+print File
+  .readlines(file_name)
+  .map { |line| line.split(" ")}
+  .flatten
+  .join(" ")
+=end

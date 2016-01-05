@@ -5,7 +5,7 @@ require 'json'
 
 # Get a version 2 api key from the user interface
 # https://isdmdg.hipchat.com/account/api
-API_KEY='cGW398wCB9LqJ0Nivd5G2uofDeCj0maIAUUOuE09'
+API_KEY=ENV['HIPCHAT_API']
 
 # Use to output room information
 # You will need to use it to get the id of the room you want to post into
@@ -26,6 +26,6 @@ end
 uri = URI.parse("https://api.hipchat.com/v2/room/342613/notification") # OSS DEV
 http = Net::HTTP.new(uri.host, uri.port)
 http.use_ssl = true
-req = Net::HTTP::Post.new(uri.path, { 'Authorization' => "Bearer #{API_KEY}", 'Content-Type' => 'application/json' } ) 
+req = Net::HTTP::Post.new(uri.path, { 'Authorization' => "Bearer #{API_KEY}", 'Content-Type' => 'application/json' } )
 req.body = %{{ "message": "#{ARGV[0]}", "color": "green"}}
 res = http.request(req)

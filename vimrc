@@ -9,7 +9,7 @@ let g:coffeeCheckHighlightErrorLine = 1
 """""
 " Basic editing configuraiton
 """""
-"set modeline
+set modeline
 set nocompatible
 set hidden
 set history=1000
@@ -54,7 +54,7 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set backspace=indent,eol,start
 " display incomplete commands
 set showcmd
-set noshowmode
+set showmode
 " Enable syntax highlighting
 syntax on
 " Enable file type detection.
@@ -72,7 +72,7 @@ let mapleader=","
 set exrc
 set secure
 
-set wildignore+=*.o,*.obj,.git,tmp/cache/assets,tmp,*/vendor/assets/bower_components/*,coverage,paper_clip,tiles/*
+set wildignore+=*.o,*.obj,.git,tmp/cache/assets,tmp,*/vendor/assets/bower_components/*,coverage,paper_clip,tiles/*,node_modules/*,coverage/*
 
 " kill the scroll bars
 " when using full screen seeing them flash can be troubling.
@@ -86,18 +86,13 @@ set go-=L
 set background=dark
 " Make Solarized use 16 colors for Terminal support
 "let g:solarized_termcolors=16
- colorscheme solarized
+colorscheme solarized
 "colorscheme slate
 
 """""
 " STATUS LINE
 """""
-"set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
-
-"""""
-" File types
-"""""
-au BufRead,BufNewFile *.ejs   setfiletype html
+set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 """"""""
 " Command-T helpers
@@ -165,6 +160,15 @@ map <leader>n :call RenameFile()<cr>
 " Clear end of line white space
 """""
 nnoremap W :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>:w<CR>
+"""""
+" Open to the last known line of a file
+"""""
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+
+"""""
+" File types
+"""""
+au BufRead,BufNewFile *.ejs   setfiletype html
 
 """""
 " scss / css
@@ -182,6 +186,7 @@ au BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab tabstop=2 softtab
 """""
 autocmd BufNewFile,BufRead *.es6 let b:jsx_ext_found = 1
 au BufNewFile,BufRead *.es6 setf javascript
+
 """""
 " Ruby
 """""
@@ -213,3 +218,19 @@ set iskeyword=-,:,@,48-57,_,192-255
 " Tim Pope suggestions
 """""
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+
+
+"""""
+" Experimental
+"""""
+" let g:ctrlp_use_caching = 0
+" if executable('ag')
+"     set grepprg=ag\ --nogroup\ --nocolor
+"
+"     let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+" else
+"   let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+"   let g:ctrlp_prompt_mappings = {
+"     \ 'AcceptSelection("e")': ['<space>', '<cr>', '<2-LeftMouse>'],
+"     \ }
+" endif

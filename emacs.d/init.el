@@ -1,13 +1,10 @@
+;;; package --- Summary
+;;; Commentary:
+;;; Code:
 (require 'package)
-
+(package-initialize)
 (add-to-list 'package-archives
-	     '("org" . "http://orgmode.org/elpa/"))
-(add-to-list 'package-archives
-	     '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives
-	     '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives
-	     '("melpa-stable" . "http://stable.melpa.org/packages/"))
+	     '("melpa" . "http://melpa.org/packages/") t)
 
 ;; Activate installed packages
 (package-initialize)
@@ -29,6 +26,7 @@ elm-mode
 evil
 evil-leader
 fish-mode
+flycheck
 helm
 helm-ag
 helm-projectile
@@ -38,7 +36,9 @@ magit
 projectile
 linum-relative
 puppet-mode
+robe
 rust-mode
+rubocop
 web-mode))
 
 (dolist (p my-packages)
@@ -72,7 +72,8 @@ web-mode))
 (set-terminal-parameter nil 'background-mode 'dark)
 (load-theme 'solarized t)
 
-
+;; Oh yah flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
 ;; Stolen from Aaron Bieber
 (require 'init-fonts)
 (require 'init-mac)
@@ -124,12 +125,21 @@ web-mode))
 (defun set-relative-line-numbers ()
   (linum-relative-mode 1)
   )
+(defun disable-evil-mode ()
+  (evil-mode 0))
 
 ;;;; Hooks
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'emacs-lisp-mode-hook 'set-relative-line-numbers)
-(add-hook 'rust-mode-line-numbers)
+(add-hook 'rust-mode-line-numbers 'set-relative-line-numbers)
 (add-hook 'ruby-mode-hook 'set-relative-line-numbers)
+(add-hook 'ruby-mode-hook 'rubocop-mode)
+
+(defun kfp-ruby-compile-command()
+  (interactive "")
+  (unless (string-match " rspec " compile-command)
+    (setq compile-command (concat "cd " (projectile-project-root) " & bin/rspec  ~/.rspec_color.rb --format documentation "))))
+
 (add-hook 'web-mode-hook 'set-relative-line-numbers)
 (add-hook 'elixir-mode-hook 'set-relative-line-numbers)
 (add-hook 'elm-mode-hook 'set-relative-line-numbers)
@@ -138,6 +148,15 @@ web-mode))
 (define-key helm-map (kbd "C-a") 'helm-keyboard-quit)
 (define-key helm-map (kbd "C-j") 'helm-next-line)
 (define-key helm-map (kbd "C-k") 'helm-previous-line)
+
+;; Make compilation mode color text based on the ANSI color control
+;; characters.
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (toggle-read-only)
+  (ansi-color-apply-on-region compilation-filter-start (point))
+  (toggle-read-only))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 
 ;; Save squiggle files somewhere out of the way

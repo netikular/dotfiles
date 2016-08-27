@@ -1,4 +1,3 @@
-fish_vi_mode
 ssh-add ~/.ssh/id_rsa
 
 # Variables
@@ -12,8 +11,8 @@ end
 
 # rbenv integration
 set -gx RBENV_ROOT /usr/local/var/rbenv
-set -gx EDITOR "emacsclient -a emacs -t -nw"
-. (rbenv init -|psub)
+set -gx EDITOR "emacsclient -nw -a emacs_nw"
+status --is-interactive; and . (rbenv init -|psub)
 
 set __fish_git_prompt_char_dirtystate '*'
 set __fish_git_prompt_showdirtystate 'yes'
@@ -33,5 +32,5 @@ complete -c p -a (cat $HOME"/.project_list") -x
 function cache_lists
   oss_hosts $OSS_STAGE_PWD builder $OSS_STAGE_HOST > $HOME/.oss_stage_hosts
   oss_hosts $OSS_PROD_PWD builder $OSS_PROD_HOST > $HOME/.oss_prod_hosts
-  p --list > $HOME/.project_list
+  p list > $HOME/.project_list
 end

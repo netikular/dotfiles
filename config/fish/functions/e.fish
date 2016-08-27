@@ -1,3 +1,3 @@
 function e
-	emacsclient -a emacs -t -nw $argv
+	emacsclient -nw --alternate-editor=emacs_nw $argv
 end

@@ -141,3 +141,6 @@ done
 
 # Local config
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+export NVM_DIR="/Users/kevin/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm

@@ -1,6 +1,5 @@
 ;;; Package --- Kevin's init.el
-;;; Commentary:
-;;; This is the evolving config
+;;; Commentary: This is the evolving config!
 ;;; Code:
 
 ;; Since I use brew to install things it makes more sense to
@@ -38,7 +37,7 @@
     helm-ag
     helm-projectile
     evil
-    colemak-evil
+    evil-colemak-basics
     evil-leader
     js2-mode
     json-mode
@@ -271,17 +270,24 @@
  "pss" 'helm-projectile-ag
  "pb" 'helm-projectile-switch-to-buffer
  "pt" 'helm-etags-select
- "g"  'magit-status
+ "g"  'kfp-magit-status
  "x"  'helm-M-x
  )
 
 (require 'evil)
-
 (evil-mode 1)
 
-(require 'colemak-evil)
+;;; Having to define this so that "turn-off-evil-mode" will exist
+(defun kfp-magit-status ()
+  (interactive)
+  (magit-status)
+  (turn-off-evil-mode)
+)
 
-;; Do it last to see if it helps load times.
+(require 'evil-colemak-basics)
+(global-evil-colemak-basics-mode)
+
+;; Do it last to senie if it helps load times.
 (server-start)
 
 (provide 'init)

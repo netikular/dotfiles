@@ -1,5 +1,6 @@
 ;;; Package --- Kevin's init.el
-;;; Commentary: This is the evolving config!
+;;; Commentary:
+;;; This is the evolving config
 ;;; Code:
 
 ;; Since I use brew to install things it makes more sense to
@@ -37,7 +38,8 @@
     helm-ag
     helm-projectile
     evil
-    evil-colemak-basics
+    colemak-evil
+    evil-leader
     js2-mode
     json-mode
     magit
@@ -121,8 +123,11 @@
 (setq-default save-place t)
 
 ;; Super handy way to select regions of text
-(require 'expand-region)
-(global-set-key (kbd "C-@") 'er/expand-region)
+;; (require 'expand-region)
+;; (global-set-key (kbd "C-@") 'er/expand-region)
+
+(require 'helm-projectile)
+(helm-projectile-on)
 
 ;; Multiple cusrors to make sublime look bad.
 (require 'multiple-cursors)
@@ -135,6 +140,9 @@
 
 ;; Magit
 (global-set-key (kbd "C-c g") 'magit-status)
+
+;; Tags based searching
+;; (global-set-key (kbd "C-c p t") 'helm-etags-select)
 
 ;; Flycheck
 (require 'flycheck)
@@ -253,11 +261,25 @@
 (setq css-indent-offset 2) ; css-mode
 (put 'upcase-region 'disabled nil)
 
+(require 'evil-leader)
+(global-evil-leader-mode)
+(evil-leader/set-leader "<SPC>")
+(evil-leader/set-key
+ "pf" 'helm-projectile-find-file
+ "pp" 'helm-projectile-switch-project
+ "pi" 'projectile-invalidate-cache
+ "pss" 'helm-projectile-ag
+ "pb" 'helm-projectile-switch-to-buffer
+ "pt" 'helm-etags-select
+ "g"  'magit-status
+ "x"  'helm-M-x
+ )
+
 (require 'evil)
+
 (evil-mode 1)
 
-(require 'evil-colemak-basics)
-(global-evil-colemak-basics-mode)
+(require 'colemak-evil)
 
 ;; Do it last to see if it helps load times.
 (server-start)

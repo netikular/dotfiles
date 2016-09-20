@@ -2,6 +2,7 @@ ssh-add ~/.ssh/id_rsa
 
 # Variables
 set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
+set -x PATH $HOME/.cargo/bin $PATH
 set -x PATH $HOME/bin $PATH
 set -x TERM screen-256color
 
@@ -34,3 +35,5 @@ function cache_lists
   oss_hosts $OSS_PROD_PWD builder $OSS_PROD_HOST > $HOME/.oss_prod_hosts
   p list > $HOME/.project_list
 end
+
+status --is-interactive; and . (rbenv init -|psub)

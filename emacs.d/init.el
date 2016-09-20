@@ -46,6 +46,7 @@
     puppet-mode
     robe
     rust-mode
+    flycheck-rust
     rubocop
     linum-relative
     expand-region
@@ -66,9 +67,10 @@
  '(backup-directory-alist (quote ((".*" . "~/.emacs.d/backups/"))))
  '(blink-cursor-mode nil)
  '(column-number-mode t)
+ '(custom-enabled-themes (quote (zenburn)))
  '(custom-safe-themes
    (quote
-    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "6f36383e007a7739933ed5d9204423adec322d1894772ff7dd5574e74a9a2d67" "f3d6a49e3f4491373028eda655231ec371d79d6d2a628f08d5aa38739340540b" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+    ("23c6fbb691955b9159887c14815a7996ca222022a6df2f7d65c038fa95961301" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "6f36383e007a7739933ed5d9204423adec322d1894772ff7dd5574e74a9a2d67" "f3d6a49e3f4491373028eda655231ec371d79d6d2a628f08d5aa38739340540b" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(global-hl-line-mode t)
  '(inhibit-startup-screen t)
  '(magit-diff-use-overlays nil)
@@ -83,6 +85,7 @@
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
+ '(visible-bell t)
  '(window-combination-resize t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -104,6 +107,7 @@
 (make-directory "~/.emacs.d/autosaves/" t)
 (make-directory "~/.emacs.d/backups/" t)
 
+(set-face-background 'hl-line "#3e4446")
 
 ;; To have solarized working properly in the terminal I am using a
 ;; special theme.
@@ -115,7 +119,7 @@
   (set-terminal-parameter nil 'background-mode 'dark)
   (load-theme 'solarized t))
 
-(kfp-default-theme)
+;; (kfp-default-theme)
 
 ;; Keep track of where I was in a file last
 (require 'saveplace)
@@ -128,6 +132,9 @@
 (require 'helm-projectile)
 (helm-projectile-on)
 
+;; Helm-M-x
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-.") 'helm-etags-select)
 ;; Multiple cusrors to make sublime look bad.
 (require 'multiple-cursors)
 (global-set-key (kbd "C-c m m") 'mc/mark-next-like-this)
@@ -234,6 +241,8 @@
 (add-hook 'emacs-lisp-mode-hook 'set-relative-line-numbers)
 (add-hook 'rust-mode-line-numbers 'set-relative-line-numbers)
 (add-hook 'ruby-mode-hook 'set-relative-line-numbers)
+(add-hook 'rust-mode-hook 'cargo-minor-mode)
+(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
 (add-hook 'web-mode-hook 'set-relative-line-numbers)
 (add-hook 'elm-mode-hook 'set-relative-line-numbers)
 (add-hook 'jsx-mode-hook 'set-relative-line-numbers)
@@ -260,6 +269,7 @@
 (setq css-indent-offset 2) ; css-mode
 (put 'upcase-region 'disabled nil)
 
+;;; Maybe Spacemacs instead... This did not work out well.
 (require 'evil-leader)
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
@@ -278,14 +288,14 @@
 (evil-mode 1)
 
 ;;; Having to define this so that "turn-off-evil-mode" will exist
-(defun kfp-magit-status ()
-  (interactive)
-  (magit-status)
-  (turn-off-evil-mode)
-)
+;; (defun kfp-magit-status ()
+;;   (interactive)
+;;   (magit-status)
+;;   (turn-off-evil-mode)
+;; )
 
-(require 'evil-colemak-basics)
-(global-evil-colemak-basics-mode)
+;; (require 'evil-colemak-basics)
+;; (global-evil-colemak-basics-mode)
 
 ;; Do it last to senie if it helps load times.
 (server-start)

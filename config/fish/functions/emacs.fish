@@ -1,3 +1,3 @@
 function emacs
-	/usr/local/bin/emacs $argv
+	/usr/local/bin/emacs -nw $argv
 end

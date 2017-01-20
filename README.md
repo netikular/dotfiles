@@ -3,10 +3,9 @@ kevin's dotfiles
 
 Requirements
 ------------
+fish shell
 
-Set zsh as your login shell:
-
-    chsh -s $(which zsh)
+instead of spending a whole night wondering why your colors are messed-up, just launch fish_config and set the default theme.
 
 Install
 -------
@@ -48,7 +47,7 @@ http://www.getmemo.org/
 Credits
 -------
 
-Thank you, to thoghtbot for the inspiration and tools needed to easily 
+Thank you, to thoghtbot for the inspiration and tools needed to easily
 manage ones own dotfiles repository.
 
 These dotfiles are maintained and used by Kevin Pratt

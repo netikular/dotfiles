@@ -90,10 +90,11 @@ function nvm-fast
 			set fish_user_paths $new_path
 		end
 	else
-		bash -c "source /usr/local/opt/nvm/nvm.sh; nvm $argv"
+		bash -c "source ~/.nvm/nvm.sh; nvm $argv"
 	end
 end
 
 function nvm
 	nvm-fast $argv
 end
+

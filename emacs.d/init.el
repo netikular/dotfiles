@@ -1,4 +1,4 @@
-;;; Package --- Kevin's init.el
+;; Package --- Kevin's init.el
 ;;; Commentary: This is the evolving config!
 ;;; Code:
 
@@ -51,6 +51,7 @@
     linum-relative
     expand-region
     multiple-cursors
+    zenburn-theme
     web-mode))
 
 (dolist (kfp-package kfp-packages)
@@ -70,13 +71,21 @@
  '(custom-enabled-themes (quote (zenburn)))
  '(custom-safe-themes
    (quote
-    ("23c6fbb691955b9159887c14815a7996ca222022a6df2f7d65c038fa95961301" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "6f36383e007a7739933ed5d9204423adec322d1894772ff7dd5574e74a9a2d67" "f3d6a49e3f4491373028eda655231ec371d79d6d2a628f08d5aa38739340540b" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+    ("14f0fbf6f7851bfa60bf1f30347003e2348bf7a1005570fd758133c87dafe08f" "7ceb8967b229c1ba102378d3e2c5fef20ec96a41f615b454e0dc0bfa1d326ea6" "0e219d63550634bc5b0c214aced55eb9528640377daf486e13fb18a32bf39856" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "23c6fbb691955b9159887c14815a7996ca222022a6df2f7d65c038fa95961301" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "6f36383e007a7739933ed5d9204423adec322d1894772ff7dd5574e74a9a2d67" "f3d6a49e3f4491373028eda655231ec371d79d6d2a628f08d5aa38739340540b" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(fci-rule-color "#383838")
  '(global-hl-line-mode t)
  '(inhibit-startup-screen t)
  '(magit-diff-use-overlays nil)
  '(magit-push-arguments (quote ("--force-with-lease")))
  '(magit-rebase-arguments (quote ("--interactive")))
  '(menu-bar-mode nil)
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+ '(package-selected-packages
+   (quote
+    (markdown-mode alchemist coffee-mode 0blayout ir-black-theme jsx-mode zenburn-theme web-mode multiple-cursors expand-region linum-relative rubocop flycheck-rust robe puppet-mode magit json-mode js2-mode evil-leader evil-colemak-basics evil helm-projectile helm-ag helm scss-mode flycheck fish-mode elm-mode cargo ag)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pivotal-api-token "08c38cace810d09737da0ea7196c0b4a")
  '(projectile-completion-system (quote helm))
  '(projectile-enable-caching t)
@@ -85,6 +94,28 @@
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3")
  '(visible-bell t)
  '(window-combination-resize t))
 (custom-set-faces
@@ -128,7 +159,7 @@
 ;; Super handy way to select regions of text
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "C-@") 'er/expand-region)
-
+(projectile-mode)
 (require 'helm-projectile)
 (helm-projectile-on)
 
@@ -161,7 +192,19 @@
 
 ;; So that we look local
 ;; requires: npm install -g eslint-project-relative
-(setq flycheck-javascript-eslint-executable "eslint-project-relative")
+;; (setq flycheck-javascript-eslint-executable "/Users/kevin/Projects/OfficeSpace/huddle/node_modules/eslint/bin/eslint.js")
+;; (setq flycheck-javascript-eslint-executable "eslint-project-relative")
+(defun my/use-eslint-from-node-modules ()
+  (let* ((root (locate-dominating-file
+                (or (buffer-file-name) default-directory)
+                "node_modules"))
+         (eslint (and root
+                      (expand-file-name "node_modules/eslint/bin/eslint.js"
+                                        root))))
+    (when (and eslint (file-executable-p eslint))
+      (setq-local flycheck-javascript-eslint-executable eslint))))
+
+(add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
 
 ;; use eslint with web-mode for jsx files
 (flycheck-add-mode 'javascript-eslint 'web-mode)
@@ -238,14 +281,15 @@
   "Function to activate relative line numbers."
   (linum-relative-mode 1))
 
-(add-hook 'emacs-lisp-mode-hook 'set-relative-line-numbers)
-(add-hook 'rust-mode-line-numbers 'set-relative-line-numbers)
-(add-hook 'ruby-mode-hook 'set-relative-line-numbers)
-(add-hook 'rust-mode-hook 'cargo-minor-mode)
-(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-(add-hook 'web-mode-hook 'set-relative-line-numbers)
-(add-hook 'elm-mode-hook 'set-relative-line-numbers)
-(add-hook 'jsx-mode-hook 'set-relative-line-numbers)
+;; (add-hook 'emacs-lisp-mode-hook 'set-relative-line-numbers)
+;; (add-hook 'rust-mode-line-numbers 'set-relative-line-numbers)
+;; (add-hook 'ruby-mode-hook 'set-relative-line-numbers)
+;; (add-hook 'rust-mode-hook 'cargo-minor-mode)
+(add-hook 'rust-mode-hook #'flycheck-rust-setup)
+;; (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+;; (add-hook 'web-mode-hook 'set-relative-line-numbers)
+;; (add-hook 'elm-mode-hook 'set-relative-line-numbers)
+;; (add-hook 'jsx-mode-hook 'set-relative-line-numbers)
 ;;; End relative line numbers
 
 (defun kfp-default-position ()

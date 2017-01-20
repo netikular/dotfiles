@@ -1,4 +1,6 @@
-ssh-add ~/.ssh/id_rsa
+if status --is-interactive
+  ssh-add ~/.ssh/id_rsa
+end
 
 # Variables
 set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
@@ -37,3 +39,7 @@ function cache_lists
 end
 
 status --is-interactive; and . (rbenv init -|psub)
+ulimit -n 4096
+
+# OPAM configuration
+# . /Users/kevin/.opam/opam-init/init.fish > /dev/null 2> /dev/null or true

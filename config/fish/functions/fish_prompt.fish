@@ -23,5 +23,5 @@ function fish_prompt --description 'Write out the prompt'
 
   set -l git_string (set_color f3e)(__fish_git_prompt)
 
-  echo -n -s (set_color $fish_color_cwd) (basename (prompt_pwd)) "$git_string "(set_color normal) ">️"
+  echo -n -s (set_color $fish_color_cwd) (basename (prompt_pwd)) "$git_string "(set_color normal) "> "
 end

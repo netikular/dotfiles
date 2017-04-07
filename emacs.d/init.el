@@ -63,15 +63,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#bcbcbc" "#d70008" "#5faf00" "#875f00" "#268bd2" "#800080" "#008080" "#5f5f87"])
  '(backup-directory-alist (quote ((".*" . "~/.emacs.d/backups/"))))
  '(blink-cursor-mode nil)
  '(column-number-mode t)
- '(custom-enabled-themes (quote (zenburn)))
+ '(custom-enabled-themes (quote (xoria256)))
  '(custom-safe-themes
    (quote
-    ("14f0fbf6f7851bfa60bf1f30347003e2348bf7a1005570fd758133c87dafe08f" "7ceb8967b229c1ba102378d3e2c5fef20ec96a41f615b454e0dc0bfa1d326ea6" "0e219d63550634bc5b0c214aced55eb9528640377daf486e13fb18a32bf39856" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "23c6fbb691955b9159887c14815a7996ca222022a6df2f7d65c038fa95961301" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "6f36383e007a7739933ed5d9204423adec322d1894772ff7dd5574e74a9a2d67" "f3d6a49e3f4491373028eda655231ec371d79d6d2a628f08d5aa38739340540b" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+    ("9463f597c5a52fb267571c0de829d31d04144bf3a455fcd06d09e19522e38dbf" "c03d60937e814932cd707a487676875457e0b564a615c1edfd453f23b06fe879" "f5512c02e0a6887e987a816918b7a684d558716262ac7ee2dd0437ab913eaec6" "14f0fbf6f7851bfa60bf1f30347003e2348bf7a1005570fd758133c87dafe08f" "7ceb8967b229c1ba102378d3e2c5fef20ec96a41f615b454e0dc0bfa1d326ea6" "0e219d63550634bc5b0c214aced55eb9528640377daf486e13fb18a32bf39856" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "23c6fbb691955b9159887c14815a7996ca222022a6df2f7d65c038fa95961301" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "8b30636c9a903a9fa38c7dcf779da0724a37959967b6e4c714fdc3b3fe0b8653" "6f36383e007a7739933ed5d9204423adec322d1894772ff7dd5574e74a9a2d67" "f3d6a49e3f4491373028eda655231ec371d79d6d2a628f08d5aa38739340540b" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(fci-rule-color "#383838")
  '(global-hl-line-mode t)
  '(inhibit-startup-screen t)
@@ -84,7 +86,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (markdown-mode alchemist coffee-mode 0blayout ir-black-theme jsx-mode zenburn-theme web-mode multiple-cursors expand-region linum-relative rubocop flycheck-rust robe puppet-mode magit json-mode js2-mode evil-leader evil-colemak-basics evil helm-projectile helm-ag helm scss-mode flycheck fish-mode elm-mode cargo ag)))
+    (minitest yaml-mode markdown-mode alchemist coffee-mode 0blayout ir-black-theme jsx-mode zenburn-theme web-mode multiple-cursors expand-region linum-relative rubocop flycheck-rust robe puppet-mode magit json-mode js2-mode evil-leader evil-colemak-basics evil helm-projectile helm-ag helm scss-mode flycheck fish-mode elm-mode cargo ag)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pivotal-api-token "08c38cace810d09737da0ea7196c0b4a")
  '(projectile-completion-system (quote helm))
@@ -189,18 +191,16 @@
 (setq-default flycheck-disabled-checkers
   (append flycheck-disabled-checkers
     '(javascript-jshint)))
-
+;; '(scss-lint) ;; add after jshint to disable this and start using sass-lint.
 ;; So that we look local
 ;; requires: npm install -g eslint-project-relative
 ;; (setq flycheck-javascript-eslint-executable "/Users/kevin/Projects/OfficeSpace/huddle/node_modules/eslint/bin/eslint.js")
 ;; (setq flycheck-javascript-eslint-executable "eslint-project-relative")
 (defun my/use-eslint-from-node-modules ()
-  (let* ((root (locate-dominating-file
-                (or (buffer-file-name) default-directory)
-                "node_modules"))
-         (eslint (and root
-                      (expand-file-name "node_modules/eslint/bin/eslint.js"
-                                        root))))
+  (let* ((root (condition-case nil (projectile-project-root) (error nil)))
+	 (eslint (and root
+		      (expand-file-name "bin/eslint"
+					root))))
     (when (and eslint (file-executable-p eslint))
       (setq-local flycheck-javascript-eslint-executable eslint))))
 
@@ -217,6 +217,7 @@
 ;; Hooks
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'ruby-mode-hook 'rubocop-mode)
+(add-hook 'ruby-mode-hook 'minitest-mode)
 
 ;; Org mode!?!!
 (make-directory "~/OrgMode" t)
@@ -316,14 +317,14 @@
 ;;; Maybe Spacemacs instead... This did not work out well.
 (require 'evil-leader)
 (global-evil-leader-mode)
-(evil-leader/set-leader "<SPC>")
+(evil-leader/set-leader ",")
 (evil-leader/set-key
- "pf" 'helm-projectile-find-file
- "pp" 'helm-projectile-switch-project
- "pi" 'projectile-invalidate-cache
- "pss" 'helm-projectile-ag
+ "tf" 'helm-projectile-find-file
+ "tp" 'helm-projectile-switch-project
+ "ti" 'projectile-invalidate-cache
+ "tss" 'helm-projectile-ag
  "pb" 'helm-projectile-switch-to-buffer
- "pt" 'helm-etags-select
+ "tj" 'helm-etags-select
  "g"  'kfp-magit-status
  "x"  'helm-M-x
  )

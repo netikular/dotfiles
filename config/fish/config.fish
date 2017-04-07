@@ -6,7 +6,6 @@ end
 set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
 set -x PATH $HOME/.cargo/bin $PATH
 set -x PATH $HOME/bin $PATH
-set -x TERM screen-256color
 
 if test -e $HOME"/.config.local.fish"
   source $HOME"/.config.local.fish"

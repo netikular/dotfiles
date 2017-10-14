@@ -16,6 +16,9 @@ emacs.d/backups/!*
 emacs.d/elpa
 emacs.d/auto-save-list/.saves*
 emacs.d/autosaves/#!*
+emacs.d/eshell
+emacs.d/history
+emacs.d/network-security.data
 projectile-bookmarks.eld
 projectile.cache
 saveplace

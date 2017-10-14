@@ -17,11 +17,11 @@
   "port of xoria256.vim (vim.org #2140)")
 
 (let ((class '((class color) (min-colors 89)))
-    (default_fg "color-252") (default_bg "color-234")
+    (default_fg "color-252") (default_bg "color-232")
     (cursor_line_bg "color-237")
     (inc_search_fg "black") (inc_search_bg "color-149")
     (non_text_fg "color-248")
-    (visual_fg "brightwhite") (visual_bg "brightblue")
+    (visual_fg "brightwhite") (visual_bg "brightblack")
     (wild_menu_fg "black") (wild_menu_fg "color-184")
     ; syntax highlighting
     (comment_fg "color-244")

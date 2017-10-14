@@ -6,7 +6,6 @@ call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-commentary'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'vim-syntastic/syntastic'
 Plug 'nelstrom/vim-textobj-rubyblock'
 Plug 'kana/vim-textobj-user'
 Plug 'tpope/vim-fugitive'
@@ -18,7 +17,17 @@ Plug 'elixir-lang/vim-elixir'
 Plug 'elmcast/elm-vim'
 Plug 'andyl/vim-textobj-elixir'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'altercation/vim-colors-solarized'
+Plug 'jnurmine/zenburn'
+Plug 'vim-scripts/xoria256.vim'
+Plug 'w0rp/ale'
+Plug 'rust-lang/rust.vim'
+Plug 'jceb/vim-orgmode'
+Plug 'tpope/vim-speeddating'
 call plug#end()
+
+let g:javascript_plugin_flow = 1
+let g:jsx_ext_required = 0
 
 set nocompatible
 set expandtab
@@ -42,6 +51,8 @@ set incsearch
 " If a file is changed outside of vim, automatically reload it without asking
 set autoread
 
+set rnu
+
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
@@ -54,13 +65,6 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 autocmd BufEnter * EnableStripWhitespaceOnSave
 
 let mapleader=","
-
-" if executable("ag")
-"     set grepprg=ag\ --nogroup\ --nocolor
-"     let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-" endif
-" let g:ctrlp_map = '<Leader>tf'
-" let g:ctrlp_show_hidden = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " JSON
@@ -83,14 +87,9 @@ let g:jsx_ext_required = 0
 " FZF
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
-nnoremap <leader>tf :Files <cr>
-nnoremap <leader>tm :Files app/models/<cr>
-nnoremap <leader>tv :Files app/views/<cr>
-nnoremap <leader>tc :Files app/controllers/<cr>
-nnoremap <leader>ty :Files app/assets/stylesheets/<cr>
-nnoremap <leader>tj :Files app/assets/javascripts/<cr>
-nnoremap <leader>tt :Files test/<cr>
-nnoremap <leader>ts :Files spec/<cr>
+let $FZF_DEFAULT_OPTS = '--reverse'
+nnoremap <leader>f :Files <cr>
+nnoremap <leader>s :Ag <cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Elm
@@ -101,41 +100,21 @@ nnoremap <leader>em :ElmMake<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-:set t_Co=256 " 256 colors
-:set background=dark
-:color grb256
+set t_Co=256 " 256 colors
+set background=dark
+" color xoria256
+colorscheme grb256
 
 command! MakeTags !ctags -R .
 
+map <C-g> <ESC>
+map! <C-g> <ESC>
 
-nmap <Leader>tss :Ack!<Space>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
-" set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
-
-command W w
-nnoremap W :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>:w<CR>
-
-" Clear the search buffer when hitting return
-" function! MapCR()
-"   nnoremap <cr> :nohlsearch<cr>
-" endfunction
-" call MapCR()
-
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 1
-let g:syntastic_ruby_checkers = ['rubocop', 'mri']
-" set signcolumn=yes
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
@@ -143,3 +122,35 @@ let g:syntastic_ruby_checkers = ['rubocop', 'mri']
 cnoremap <expr> %% expand('%:h').'/'
 map <leader>e :edit %%
 map <leader>v :view %%
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ALE configuration
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" \   'ruby': ['rubocop'],
+
+let g:ale_fixers = {
+    \   'javascript': ['prettier'],
+    \}
+let g:ale_enabled = 1
+let g:ale_fix_on_save = 1
+let g:ale_sign_column_always = 1
+let g:ale_lint_delay=1000
+" let g:ale_linters = {
+"     \   'scss': ['scss-lint'],
+"     \}
+
+" nvim terminal mode
+if has('nvim')
+  tnoremap <C-h> <C-\><C-N><C-w>h
+  tnoremap <C-j> <C-\><C-N><C-w>j
+  tnoremap <C-k> <C-\><C-N><C-w>k
+  tnoremap <C-l> <C-\><C-N><C-w>l
+  inoremap <C-h> <C-\><C-N><C-w>h
+  inoremap <C-j> <C-\><C-N><C-w>j
+  inoremap <C-k> <C-\><C-N><C-w>k
+  inoremap <C-l> <C-\><C-N><C-w>l
+  nnoremap <C-h> <C-w>h
+  nnoremap <C-j> <C-w>j
+  nnoremap <C-k> <C-w>k
+  nnoremap <C-l> <C-w>l
+endif

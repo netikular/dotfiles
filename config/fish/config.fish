@@ -4,6 +4,7 @@ end
 
 # Variables
 set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
+set -x PATH $HOME/.config/yarn/global/node_modules/.bin $PATH
 set -x PATH $HOME/.cargo/bin $PATH
 set -x PATH $HOME/bin $PATH
 
@@ -42,3 +43,5 @@ ulimit -n 4096
 
 # OPAM configuration
 # . /Users/kevin/.opam/opam-init/init.fish > /dev/null 2> /dev/null or true
+
+test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish

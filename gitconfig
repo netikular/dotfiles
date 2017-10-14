@@ -16,11 +16,10 @@
   fa = fetch --all
   fp = fetch --all -p
   pom = push origin master
-  po =  push origin
+  po =  push -u origin --force-with-lease
   b = branch
   ds = diff --stat=160,120
   dh1 = diff HEAD~1
-  pou  = push --set-upstream origin
 
     # Divergence (commits we added and commits remote added)
   div = divergence
@@ -61,3 +60,5 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[magit]
+	hideCampaign = true

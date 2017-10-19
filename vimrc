@@ -24,6 +24,7 @@ Plug 'w0rp/ale'
 Plug 'rust-lang/rust.vim'
 Plug 'jceb/vim-orgmode'
 Plug 'tpope/vim-speeddating'
+Plug 'itchyny/lightline.vim'
 call plug#end()
 
 let g:javascript_plugin_flow = 1
@@ -52,6 +53,7 @@ set incsearch
 set autoread
 
 set rnu
+set noshowmode
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -138,6 +140,13 @@ let g:ale_lint_delay=1000
 " let g:ale_linters = {
 "     \   'scss': ['scss-lint'],
 "     \}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Light line configuration
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ }
 
 " nvim terminal mode
 if has('nvim')

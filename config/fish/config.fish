@@ -14,7 +14,8 @@ end
 
 # rbenv integration
 set -gx RBENV_ROOT /usr/local/var/rbenv
-set -gx EDITOR "emacsclient -nw -a emacs_nw"
+set -gx EDITOR "vim"
+# set -gx EDITOR "emacsclient -nw -a emacs_nw"
 status --is-interactive; and . (rbenv init -|psub)
 
 set __fish_git_prompt_char_dirtystate '*'

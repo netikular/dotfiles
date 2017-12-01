@@ -7,15 +7,24 @@ set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
 set -x PATH $HOME/.config/yarn/global/node_modules/.bin $PATH
 set -x PATH $HOME/.cargo/bin $PATH
 set -x PATH $HOME/bin $PATH
+set -x PATH $HOME/.fastlane/bin $PATH
+set -x PATH $PATH $HOME/Library/Android/sdk/platform-tools/
+set -x PATH $PATH (python3 -c 'import site; print(site.USER_BASE)')"/bin"
+set -x ANDROID_HOME $HOME/Library/Android/sdk/
+set -x JAVA_HOME "/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
 
 if test -e $HOME"/.config.local.fish"
   source $HOME"/.config.local.fish"
 end
 
+if set -q NVIM_LISTEN_ADDRESS
+  set -x VISUAL "nvr -cc split --remote-wait +'set bufhidden=wipe'"
+else
+  set -x VISUAL "nvim"
+end
+
 # rbenv integration
 set -gx RBENV_ROOT /usr/local/var/rbenv
-set -gx EDITOR "vim"
-# set -gx EDITOR "emacsclient -nw -a emacs_nw"
 status --is-interactive; and . (rbenv init -|psub)
 
 set __fish_git_prompt_char_dirtystate '*'
@@ -44,5 +53,6 @@ ulimit -n 4096
 
 # OPAM configuration
 # . /Users/kevin/.opam/opam-init/init.fish > /dev/null 2> /dev/null or true
+eval (opam config env)
 
 test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish

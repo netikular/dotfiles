@@ -4,14 +4,14 @@
 
 packadd minpac
 call minpac#init()
-" call minpac#add('altercation/vim-colors-solarized')
+call minpac#add('altercation/vim-colors-solarized')
 call minpac#add('andyl/vim-textobj-elixir')
 call minpac#add('elixir-lang/vim-elixir')
 call minpac#add('elmcast/elm-vim')
-" call minpac#add('elzr/vim-json')
+call minpac#add('elzr/vim-json')
 call minpac#add('itchyny/lightline.vim')
-" call minpac#add('jceb/vim-orgmode')
-" call minpac#add('jnurmine/zenburn')
+call minpac#add('jceb/vim-orgmode')
+call minpac#add('jnurmine/zenburn')
 call minpac#add('junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' })
 call minpac#add('junegunn/fzf.vim')
 call minpac#add('k-takata/minpac', {'type':'opt'})
@@ -20,16 +20,19 @@ call minpac#add('mxw/vim-jsx')
 call minpac#add('nelstrom/vim-textobj-rubyblock')
 call minpac#add('ntpeters/vim-better-whitespace')
 call minpac#add('pangloss/vim-javascript')
-" call minpac#add('reasonml-editor/vim-reason-plus')
+call minpac#add('reasonml-editor/vim-reason-plus')
 call minpac#add('rust-lang/rust.vim')
 call minpac#add('vim-ruby/vim-ruby')
 call minpac#add('tpope/vim-commentary')
-" call minpac#add('tpope/vim-fugitive')
-" call minpac#add('tpope/vim-speeddating')
+call minpac#add('tpope/vim-fugitive')
+call minpac#add('tpope/vim-speeddating')
 call minpac#add('tpope/vim-surround')
-" call minpac#add('tpope/vim-unimpaired')
-" call minpac#add('vim-scripts/xoria256.vim')
+call minpac#add('tpope/vim-unimpaired')
+call minpac#add('vim-scripts/xoria256.vim')
 call minpac#add('w0rp/ale')
+call minpac#add('rizzatti/dash.vim')
+call minpac#add('rhysd/vim-crystal')
+call minpac#add('netikular/vim-fish')
 if has('nvim')
   call minpac#add('kassio/neoterm')
 endif
@@ -53,19 +56,20 @@ set shiftwidth=2
 set tabstop=2
 set softtabstop=2
 set hlsearch
+set incsearch
+set ignorecase
+set smartcase
 set cursorline
-set ignorecase smartcase
 syntax on
-filetype plugin on
+filetype plugin indent on
 set path+=**
 set wildmenu
 set wildignore+=*.o,*.obj,.git,tmp/cache/assets,tmp,*/vendor/assets/bower_components/*,coverage,paper_clip,tiles/*,node_modules/*,coverage/*
-" " display incomplete commands
+" display incomplete commands
 set showcmd
 set showmode
 set laststatus=2
 set showmatch
-set incsearch
 " If a file is changed outside of vim, automatically reload it without asking
 set autoread
 set clipboard=unnamed
@@ -73,11 +77,16 @@ set clipboard=unnamed
 set rnu
 set noshowmode
 
+set winwidth=84
+set winheight=5
+set winminheight=5
+set winheight=999
+
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-" " What is this:
-" " runtime macros/matchit.vim
+" What is this:
+" runtime macros/matchit.vim
 
 set backup
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
@@ -92,6 +101,11 @@ let mapleader=","
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 command! PackUpdate call minpac#update()
 command! PackClean call minpac#clean()
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Leaders
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader>h :nohlsearch<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " JSON
@@ -137,7 +151,6 @@ command! MakeTags !ctags -R .
 
 map <C-g> <ESC>
 map! <C-g> <ESC>
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
@@ -192,9 +205,9 @@ let g:lightline = {
       \ }
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Ruby file format
+" Dash
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
+let g:dash_activate = 0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " nvim terminal mode

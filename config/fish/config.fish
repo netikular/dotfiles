@@ -24,7 +24,7 @@ else
 end
 
 # rbenv integration
-set -gx RBENV_ROOT /usr/local/var/rbenv
+set -x RBENV_ROOT /usr/local/var/rbenv
 status --is-interactive; and . (rbenv init -|psub)
 
 set __fish_git_prompt_char_dirtystate '*'
@@ -48,7 +48,6 @@ function cache_lists
   p list > $HOME/.project_list
 end
 
-status --is-interactive; and . (rbenv init -|psub)
 ulimit -n 4096
 
 # OPAM configuration

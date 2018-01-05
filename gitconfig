@@ -62,3 +62,5 @@
 	required = true
 [magit]
 	hideCampaign = true
+[init]
+	templatedir = ~/.git_template

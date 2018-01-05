@@ -4,7 +4,6 @@
 
 packadd minpac
 call minpac#init()
-call minpac#add('altercation/vim-colors-solarized')
 call minpac#add('andyl/vim-textobj-elixir')
 call minpac#add('elixir-lang/vim-elixir')
 call minpac#add('elmcast/elm-vim')
@@ -23,16 +22,18 @@ call minpac#add('pangloss/vim-javascript')
 call minpac#add('reasonml-editor/vim-reason-plus')
 call minpac#add('rust-lang/rust.vim')
 call minpac#add('vim-ruby/vim-ruby')
+call minpac#add('tpope/vim-rails')
 call minpac#add('tpope/vim-commentary')
 call minpac#add('tpope/vim-fugitive')
 call minpac#add('tpope/vim-speeddating')
 call minpac#add('tpope/vim-surround')
-call minpac#add('tpope/vim-unimpaired')
+" call minpac#add('tpope/vim-unimpaired')
 call minpac#add('vim-scripts/xoria256.vim')
 call minpac#add('w0rp/ale')
 call minpac#add('rizzatti/dash.vim')
 call minpac#add('rhysd/vim-crystal')
 call minpac#add('netikular/vim-fish')
+call minpac#add('lifepillar/vim-solarized8')
 if has('nvim')
   call minpac#add('kassio/neoterm')
 endif
@@ -62,7 +63,7 @@ set smartcase
 set cursorline
 syntax on
 filetype plugin indent on
-set path+=**
+" set path+=**
 set wildmenu
 set wildignore+=*.o,*.obj,.git,tmp/cache/assets,tmp,*/vendor/assets/bower_components/*,coverage,paper_clip,tiles/*,node_modules/*,coverage/*
 " display incomplete commands
@@ -78,15 +79,19 @@ set rnu
 set noshowmode
 
 set winwidth=84
-set winheight=5
-set winminheight=5
-set winheight=999
+set winheight=10
+set winminheight=10
+set winheight=9999
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-" What is this:
-" runtime macros/matchit.vim
+
+" This is needed for vim to work with % on ruby files
+" nvim does not need this
+if !(has("nvim"))
+  runtime macros/matchit.vim
+endif
 
 set backup
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
@@ -95,6 +100,12 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 autocmd BufEnter * EnableStripWhitespaceOnSave
 
 let mapleader=","
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" netrw
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:netrw_preview=1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " minpac
@@ -106,6 +117,10 @@ command! PackClean call minpac#clean()
 " Leaders
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nmap <leader>h :nohlsearch<cr>
+nmap <leader>tn :TestNearest<cr>
+nmap <leader>tf :TestFile<cr>
+nmap <leader>tl :TestLast<cr>
+nmap <leader>bl <c-^>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " JSON
@@ -130,9 +145,13 @@ au BufNewFile,BufRead *.es6 set filetype=javascript.jsx
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
 let $FZF_DEFAULT_OPTS = '--reverse'
-nnoremap <leader>f :Files <cr>
-nnoremap <leader>s :Ag <cr>
+nnoremap <leader>f :FZF <cr>
+nnoremap <leader>s :call KAg()<cr>
+" nnoremap <leader><plug>(fzf-complete-file-ag)
 
+function! KAg()
+  call fzf#vim#ag(input("Search: "), 0)
+endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Elm
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -145,7 +164,10 @@ nnoremap <leader>em :ElmMake<CR>
 set t_Co=256 " 256 colors
 set background=dark
 " color xoria256
-colorscheme grb256
+function! DefaultColor()
+  colorscheme grb256
+endfunction
+call DefaultColor()
 
 command! MakeTags !ctags -R .
 
@@ -167,10 +189,10 @@ map <leader>v :view %%
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ALE configuration
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" \   'javascript': ['prettier'],
+      " \ 'javascript': ['prettier'],
 let g:ale_fixers = {
       \ 'reason': ['refmt'],
-      \   'ruby': ['rubocop'],
+      \ 'ruby': ['rubocop'],
       \}
 
 let g:ale_enabled = 1

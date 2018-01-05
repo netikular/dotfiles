@@ -12,6 +12,9 @@ set -x PATH $PATH $HOME/Library/Android/sdk/platform-tools/
 set -x PATH $PATH (python3 -c 'import site; print(site.USER_BASE)')"/bin"
 set -x ANDROID_HOME $HOME/Library/Android/sdk/
 set -x JAVA_HOME "/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
+set -x MANPATH $MANPATH /usr/local/opt/erlang/lib/erlang/man
+
+alias vim=nvim
 
 if test -e $HOME"/.config.local.fish"
   source $HOME"/.config.local.fish"

@@ -34,6 +34,7 @@ call minpac#add('rizzatti/dash.vim')
 call minpac#add('rhysd/vim-crystal')
 call minpac#add('netikular/vim-fish')
 call minpac#add('lifepillar/vim-solarized8')
+call minpac#add('mileszs/ack.vim')
 if has('nvim')
   call minpac#add('kassio/neoterm')
 endif
@@ -100,6 +101,14 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 autocmd BufEnter * EnableStripWhitespaceOnSave
 
 let mapleader=","
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Ack
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " netrw

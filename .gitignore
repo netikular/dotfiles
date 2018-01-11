@@ -25,3 +25,7 @@ saveplace
 
 # Random
 .DS_Store
+
+# nvim
+config/nvim/pack/*
+config/nvim/.netrwhist

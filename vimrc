@@ -1,6 +1,5 @@
 " This is Kevin Pratt's .vimrc file
 " vim:set ts=2 sts=2 sw=2 expandtab:
-"
 
 packadd minpac
 call minpac#init()
@@ -84,6 +83,12 @@ set winheight=10
 set winminheight=10
 set winheight=9999
 
+" This saves the file automatically so that when you're using
+" I have this enabled so that if I've forgotten to save and use FZF
+" To swtich files it saves it and opens the new file otherwise vim
+" stops you from opening the file
+set autowriteall
+
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
@@ -101,6 +106,11 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 autocmd BufEnter * EnableStripWhitespaceOnSave
 
 let mapleader=","
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Rust
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:autofmt_autosave = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Ack
@@ -161,6 +171,20 @@ nnoremap <leader>s :call KAg()<cr>
 function! KAg()
   call fzf#vim#ag(input("Search: "), 0)
 endfunction
+
+" An action can be a reference to a function that processes selected lines
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
+let g:fzf_action = {
+      \ 'ctrl-q': function('s:build_quickfix_list'),
+      \ 'ctrl-t': 'tab split',
+      \ 'ctrl-x': 'split',
+      \ 'ctrl-v': 'vsplit' }
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Elm
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -170,11 +194,14 @@ nnoremap <leader>em :ElmMake<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set t_Co=256 " 256 colors
+" set t_Co=256 " 256 colors
+let g:solarized_use16 = 1
+set termguicolors
 set background=dark
 " color xoria256
 function! DefaultColor()
-  colorscheme grb256
+  " colorscheme grb256
+  colorscheme solarized8
 endfunction
 call DefaultColor()
 
@@ -232,7 +259,7 @@ endif
 " Light line configuration
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'solarized',
       \ }
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

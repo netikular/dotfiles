@@ -4,8 +4,11 @@
 packadd minpac
 call minpac#init()
 call minpac#add('andyl/vim-textobj-elixir')
-call minpac#add('elixir-lang/vim-elixir')
+call minpac#add('elixir-editors/vim-elixir')
+call minpac#add('robertmeta/nofrils')
+" call minpac#add('elixir-lang/vim-elixir')
 " call minpac#add('ElmCast/elm-vim')
+call minpac#add('elm-tooling/elm-vim')
 call minpac#add('elzr/vim-json')
 call minpac#add('itchyny/lightline.vim')
 call minpac#add('jceb/vim-orgmode')
@@ -42,8 +45,8 @@ call minpac#add('toyamarinyon/vim-swift')
 " call minpac#add('slashmili/alchemist.vim')
 call minpac#add('sukima/vim-tiddlywiki')
 call minpac#add('posva/vim-vue')
-call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
-call minpac#add('andys8/vim-elm-syntax', { 'for': ['elm'] })
+" call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
+" call minpac#add('andys8/vim-elm-syntax', { 'for': ['elm'] })
 " if has('nvim')
 "   call minpac#add('autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' })
 "   call minpac#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' })
@@ -67,7 +70,7 @@ set incsearch
 set ignorecase
 set smartcase
 set cursorline
-syntax on
+" syntax off
 filetype plugin indent on
 " set path+=**
 set wildmenu
@@ -89,16 +92,16 @@ set winheight=10
 set winminheight=10
 set winheight=9999
 
+" Use Bacspace in normal mode to remove the search
+nmap <silent> <BS>  :nohlsearch<CR>
+
 " This saves the file automatically so that when you're using
 " I have this enabled so that if I've forgotten to save and use FZF
 " To swtich files it saves it and opens the new file otherwise vim
 " stops you from opening the file
 set autowriteall
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
-set guifont=Inconsolata-g:h14
+" set guifont=Inconsolata-g:h14
 
 
 " This is needed for vim to work with % on ruby files
@@ -240,12 +243,13 @@ map <leader>v :view %%
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ALE configuration
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-      " \ 'javascript': ['prettier'],
 let g:ale_fixers = {
       \ 'reason': ['refmt'],
       \ 'ruby': ['rubocop'],
       \ 'elixir': ['mix_format'],
+      \ 'javascript': ['prettier'],
       \}
+let g:ale_linters = { 'elm': ['elm_ls'] }
 
 let g:ale_enabled = 0
 let g:ale_fix_on_save = 1
@@ -284,6 +288,22 @@ let g:lightline = {
 let g:dash_activate = 0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" persistent_undo
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if has('persistent_undo')
+    set undolevels=5000
+    set undodir=$HOME/.VIM_UNDO_FILES
+    set undofile
+endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" better_whitespace
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:better_whitespace_enabled=1
+let g:strip_whitespace_on_save=1
+let g:strip_whitespace_confirm=0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " neoterm mode
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:neoterm_autoinsert=1
@@ -300,3 +320,5 @@ nnoremap <a-k> <c-w>k
 nnoremap <a-l> <c-w>l
 tnoremap <expr> <A-r> '<C-\><C-n>"'.nr2char(getchar()).'pi'
 highlight TermCursorNC ctermfg=4 guifg=none guibg=none
+hi ErrorMsg ctermfg=1 ctermbg=4 guifg=none guibg=none guisp=NONE cterm=NONE,reverse gui=NONE
+" hi Error ctermfg=160 ctermbg=4 guifg=#dc322f guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold

@@ -1,1 +1,6 @@
-{"skip_analytics":true,"install":"743b06db-0e5e-4845-a85e-9d4858fe8d09"}
+{
+  "skip_analytics": true,
+  "install": "743b06db-0e5e-4845-a85e-9d4858fe8d09",
+  "schema": 1,
+  "skipAnalytics": false
+}

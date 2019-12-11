@@ -1,9 +1,10 @@
 if status --is-interactive
-  ssh-add ~/.ssh/id_rsa
+  ssh-add -q -A
 end
 
 # Variables
 set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
+set -x PATH $HOME/.asdf/shims $PATH
 set -x PATH $HOME/.config/yarn/global/node_modules/.bin $PATH
 set -x PATH $HOME/.cargo/bin $PATH
 set -x PATH $HOME/bin $PATH
@@ -26,7 +27,7 @@ end
 
 # rbenv integration
 set -x RBENV_ROOT /usr/local/var/rbenv
-status --is-interactive; and . (rbenv init -|psub)
+status --is-interactive; and source (rbenv init -|psub)
 
 set __fish_git_prompt_char_dirtystate '*'
 set __fish_git_prompt_showdirtystate 'yes'
@@ -56,3 +57,7 @@ ulimit -n 4096
 eval (opam config env)
 
 test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
+source ~/.asdf/asdf.fish
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc' ]; . '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc'; end

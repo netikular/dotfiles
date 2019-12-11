@@ -14,3 +14,4 @@ function! PresentationMode()
 endfunction
 
 set iskeyword+=-
+set lbr

@@ -1,4 +1,5 @@
 [diff]
+	renameLimit = 1000
 [color]
   ui = auto
 [alias]
@@ -65,3 +66,11 @@
 	hideCampaign = true
 [init]
 	templatedir = ~/.git_template
+[user]
+	name = Kevin Pratt
+	email = kevin@paradem.co
+	signingkey = E77F6E7E410B8190
+[commit]
+	gpgsign = true
+[gpg]
+	program = gpg

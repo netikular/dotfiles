@@ -8,9 +8,11 @@ call minpac#add('elixir-editors/vim-elixir')
 call minpac#add('robertmeta/nofrils')
 " call minpac#add('elixir-lang/vim-elixir')
 " call minpac#add('ElmCast/elm-vim')
+"
+call minpac#add('hauleth/blame.vim')
 call minpac#add('elm-tooling/elm-vim')
 call minpac#add('elzr/vim-json')
-call minpac#add('itchyny/lightline.vim')
+" call minpac#add('itchyny/lightline.vim')
 call minpac#add('jceb/vim-orgmode')
 call minpac#add('jnurmine/zenburn')
 call minpac#add('junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' })
@@ -214,11 +216,12 @@ let g:fzf_action = {
 " set t_Co=256 " 256 colors
 let g:solarized_use16 = 1
 set termguicolors
-set background=dark
+" set background=dark
 " color xoria256
 function! DefaultColor()
   " colorscheme grb256
   colorscheme solarized8
+  " colorscheme blame
   " colorscheme zenburn
 endfunction
 call DefaultColor()

@@ -14,7 +14,6 @@ call minpac#add('elm-tooling/elm-vim')
 call minpac#add('elzr/vim-json')
 " call minpac#add('itchyny/lightline.vim')
 call minpac#add('jceb/vim-orgmode')
-call minpac#add('jnurmine/zenburn')
 call minpac#add('junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' })
 call minpac#add('junegunn/fzf.vim')
 call minpac#add('k-takata/minpac', {'type':'opt'})
@@ -34,12 +33,16 @@ call minpac#add('tpope/vim-fugitive')
 call minpac#add('tpope/vim-speeddating')
 call minpac#add('tpope/vim-surround')
 " call minpac#add('tpope/vim-unimpaired')
-call minpac#add('vim-scripts/xoria256.vim')
 call minpac#add('w0rp/ale')
 call minpac#add('rizzatti/dash.vim')
 call minpac#add('rhysd/vim-crystal')
 call minpac#add('netikular/vim-fish')
-call minpac#add('lifepillar/vim-solarized8')
+" Themes
+call minpac#add('vim-scripts/xoria256.vim')
+call minpac#add('jnurmine/zenburn')
+call minpac#add('lifepillar/vim-solarized9')
+call minpac#add('arcticicestudio/nord-vim')
+
 call minpac#add('mileszs/ack.vim')
 call minpac#add('kassio/neoterm')
 call minpac#add('janko-m/vim-test')
@@ -152,7 +155,8 @@ nmap <leader>h :nohlsearch<cr>
 nmap <leader>tn :TestNearest<cr>
 nmap <leader>tf :TestFile<cr>
 nmap <leader>tl :TestLast<cr>
-nmap <leader>bl <c-^>
+nmap <leader>b :Buffers<cr>
+" nmap <leader>bl <c-^>
 nmap <leader>p :call CocActionAsync('format')<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -214,12 +218,13 @@ let g:fzf_action = {
 " COLOR
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " set t_Co=256 " 256 colors
-let g:solarized_use16 = 1
+" let g:solarized_use16 = 1
 set termguicolors
-" set background=dark
+set background=dark
 " color xoria256
 function! DefaultColor()
   " colorscheme grb256
+  " colorscheme nord
   colorscheme solarized8
   " colorscheme blame
   " colorscheme zenburn
@@ -246,18 +251,26 @@ map <leader>v :view %%
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ALE configuration
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+      " \ 'reason': ['refmt'],
+      " \ 'javascript': ['prettier'],
+      " \ 'javascript': ['prettier'],
 let g:ale_fixers = {
-      \ 'reason': ['refmt'],
       \ 'ruby': ['rubocop'],
       \ 'elixir': ['mix_format'],
       \ 'javascript': ['prettier'],
+      \ 'javascript.jsx': ['prettier'],
       \}
-let g:ale_linters = { 'elm': ['elm_ls'] }
+let g:ale_linters = {
+      \ 'ruby': ['rubocop'],
+      \ 'elixir': ['mix_format'],
+      \}
 
 let g:ale_enabled = 0
 let g:ale_fix_on_save = 1
 let g:ale_sign_column_always = 1
 let g:ale_lint_delay=1000
+let g:ale_linters_explicit = 1
+let g:ale_ruby_rubocop_executable = 'bin/rubocop'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " LanguageClient Config

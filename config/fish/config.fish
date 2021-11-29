@@ -1,6 +1,12 @@
 if status --is-interactive
-  ssh-add -q -A
+  if test (uname) = "Darwin"
+    ssh-add -q -A
+  else
+    ssh-add -q
+  end
 end
+
+set -x EDITOR nvim
 
 # Variables
 set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
@@ -9,12 +15,17 @@ set -x PATH $HOME/local/nvim/bin $PATH
 # set -x PATH $HOME/.bin $PATH
 # set -x PATH $HOME/.cargo/bin $PATH
 set -x PATH $HOME/bin $PATH
+
+set -x PATH $HOME/.local/bin $PATH
+set -x PATH $HOME/go/bin $PATH
 # set -x PATH $HOME/.fastlane/bin $PATH
 # set -x PATH $PATH $HOME/Library/Android/sdk/platform-tools/
 # set -x PATH $PATH (python3 -c 'import site; print(site.USER_BASE)')"/bin"
 # set -x ANDROID_HOME $HOME/Library/Android/sdk/
 # set -x JAVA_HOME "/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
 set -x MANPATH $MANPATH /usr/local/opt/erlang/lib/erlang/man
+
+set -x TERM screen-256color
 
 if test -e $HOME"/.config.local.fish"
   source $HOME"/.config.local.fish"
@@ -66,6 +77,8 @@ set -x KERL_CONFIGURE_OPTIONS "--disable-hipe --without-javac --with-ssl=/usr/lo
 set -x RUBY_CONFIGURE_OPTS "--with-openssl-dir=/usr/local/opt/openssl@1.1"
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc' ]; . '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc'; end
+# if [ -f '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc' ]; . '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc'; end
 
-source /Users/kevin/Projects/OfficeSpace/google-cloud-sdk/path.fish.inc
+# source /Users/kevin/Projects/OfficeSpace/google-cloud-sdk/path.fish.inc
+eval (direnv hook fish)
+

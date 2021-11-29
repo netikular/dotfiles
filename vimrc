@@ -338,3 +338,8 @@ tnoremap <expr> <A-r> '<C-\><C-n>"'.nr2char(getchar()).'pi'
 highlight TermCursorNC ctermfg=4 guifg=none guibg=none
 hi ErrorMsg ctermfg=1 ctermbg=4 guifg=none guibg=none guisp=NONE cterm=NONE,reverse gui=NONE
 " hi Error ctermfg=160 ctermbg=4 guifg=#dc322f guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
+"
+augroup wayland_clipboard
+  au!
+  au TextYankPost * call system("ssh 10.0.1.201 say 'aset'", @")
+augroup END

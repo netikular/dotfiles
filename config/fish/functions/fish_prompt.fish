@@ -1,28 +1,31 @@
 function fish_prompt --description 'Write out the prompt'
-	set -l mode_str
-  switch "$fish_key_bindings"
-  case '*_vi_*' '*_vi'
-    # possibly fish_vi_key_bindings, or custom key bindings
-    # that includes the name "vi"
-    set mode_str (
-      echo -n " "
-      switch $fish_bind_mode
-      case default
-        set_color --bold --background red white
-        echo -n "[N]"
-      case insert
-        set_color --bold green
-        echo -n "[I]"
-      case visual
-        set_color --bold magenta
-        echo -n "[V]"
-      end
-      set_color normal
-    )
-  end
+    set -l last_pipestatus $pipestatus
+    set -lx __fish_last_status $status # Export for __fish_print_pipestatus.
+    set -l normal (set_color normal)
+    set -q fish_color_status
+    or set -g fish_color_status --background=red white
 
-  set -l git_string (set_color f3e)(__fish_git_prompt)
+    # Color the prompt differently when we're root
+    set -l color_cwd $fish_color_cwd
+    set -l suffix '>'
+    if functions -q fish_is_root_user; and fish_is_root_user
+        if set -q fish_color_cwd_root
+            set color_cwd $fish_color_cwd_root
+        end
+        set suffix '#'
+    end
 
-  set -g __fish_prompt_hostname (hostname)
-  echo -n -s "$__fish_prompt_hostname " (set_color $fish_color_cwd) (basename (prompt_pwd)) "$git_string "(set_color normal) "> "
+    # Write pipestatus
+    # If the status was carried over (e.g. after `set`), don't bold it.
+    set -l bol_flag --bold
+    set -q __fish_prompt_status_generation; or set -g __fish_prompt_status_generation $status_generation
+    if test $__fish_prompt_status_generation = $status_generation
+        set bold_flag
+    end
+    set __fish_prompt_status_generation $status_generation
+    set -l status_color (set_color $fish_color_status)
+    set -l statusb_color (set_color $bold_flag $fish_color_status)
+    set -l prompt_status (__fish_print_pipestatus "[" "]" "|" "$status_color" "$statusb_color" $last_pipestatus)
+
+    echo -n -s (prompt_login)' ' (set_color $color_cwd) (prompt_pwd) $normal (fish_vcs_prompt) $normal " "$prompt_status $suffix " "
 end

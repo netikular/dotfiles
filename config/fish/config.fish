@@ -1,3 +1,4 @@
+# My Fish Config
 if status --is-interactive
   if test (uname) = "Darwin"
     ssh-add -q -A

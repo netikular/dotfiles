@@ -47,6 +47,7 @@ set winheight=9999
 
 call plug#begin('~/.vim/plugged')
 Plug 'lifepillar/vim-solarized8'
+Plug 'chriskempson/base16-vim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -82,8 +83,10 @@ nnoremap <Space> za
 
 let mapleader=","
 let test#strategy='neoterm'
+let g:test#javascript#runner = 'jest'
 
 let g:gruvbox_material_background = 'hard'
+let base16colorspace = 256
 colorscheme solarized8
 
 nnoremap <leader>s <cmd>lua require('telescope.builtin').grep_string({search = vim.fn.input("Search > ")})<cr>
@@ -118,9 +121,9 @@ nmap <leader>tl :TestLast<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
       " \ 'reason': ['refmt'],
       " \ 'javascript': ['prettier'],
-      " \ 'javascript': ['prettier'],
+      " \ 'typescript': ['prettier'],
 let g:ale_fixers = {
-      \ 'ruby': ['rubocop'],
+      \ 'ruby': ['standard'],
       \ 'elixir': ['mix_format'],
       \ 'javascript': ['prettier'],
       \ 'javascript.jsx': ['prettier'],
@@ -128,6 +131,7 @@ let g:ale_fixers = {
 let g:ale_linters = {
       \ 'ruby': ['rubocop'],
       \ 'elixir': ['mix_format'],
+      \ 'javascript': ['eslint'],
       \}
 
 let g:ale_enabled = 0
@@ -193,7 +197,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = {"solargraph"}
+local servers = {"solargraph", "tsserver"}
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end

@@ -74,6 +74,8 @@ Plug 'TimUntersberger/neogit'
 
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
+Plug 'evanleck/vim-svelte', {'branch': 'main'}
+
 call plug#end()
 
 set foldlevel=20

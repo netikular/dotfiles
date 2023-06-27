@@ -47,10 +47,13 @@ set winheight=9999
 
 call plug#begin('~/.vim/plugged')
 Plug 'lifepillar/vim-solarized8'
+Plug 'rebelot/kanagawa.nvim'
 Plug 'chriskempson/base16-vim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
+
+Plug 'ThePrimeagen/harpoon'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
@@ -58,11 +61,11 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'kassio/neoterm'
 Plug 'janko-m/vim-test'
-Plug 'ntpeters/vim-better-whitespace'
+" Plug 'ntpeters/vim-better-whitespace'
 
 Plug 'elixir-editors/vim-elixir'
 
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
 Plug 'tpope/vim-fugitive'
 " Plug 'vim-ruby/vim-ruby'
 " Plug 'tpope/vim-rails'
@@ -70,11 +73,15 @@ Plug 'tpope/vim-fugitive'
 Plug 'morhetz/gruvbox'
 Plug 'sainnhe/gruvbox-material'
 
-Plug 'TimUntersberger/neogit'
+" Plug 'TimUntersberger/neogit'
 
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
 Plug 'evanleck/vim-svelte', {'branch': 'main'}
+
+" Plug 'norcalli/nvim-colorizer.lua'
+"
+" Plug 'Stoozy/vimcord'
 
 call plug#end()
 
@@ -95,6 +102,9 @@ nnoremap <leader>s <cmd>lua require('telescope.builtin').grep_string({search = v
 nnoremap <leader>f <cmd>lua require('telescope.builtin').find_files({})<cr>
 nnoremap <leader>b <cmd>Telescope buffers<cr>
 nnoremap <leader>e :e %<cr>
+nnoremap <leader>g :Git<cr>
+nnoremap <leader>po :Git -c push.default=current push<cr>
+nnoremap <leader>r :w <bar> !rubocop -A %<cr>
 
 lua <<EOF
 require('telescope').setup {
@@ -114,9 +124,9 @@ require('telescope').load_extension('fzf')
 EOF
 
 nmap <leader>h :nohlsearch<cr>
-nmap <leader>tn :TestNearest<cr>
-nmap <leader>tf :TestFile<cr>
-nmap <leader>tl :TestLast<cr>
+nmap <leader>tn :wa<cr>:TestNearest<cr>
+nmap <leader>tf :wa<cr>:TestFile<cr>
+nmap <leader>tl :wa<cr>:TestLast<cr>
 "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ALE configuration
@@ -125,36 +135,67 @@ nmap <leader>tl :TestLast<cr>
       " \ 'javascript': ['prettier'],
       " \ 'typescript': ['prettier'],
 let g:ale_fixers = {
-      \ 'ruby': ['standard'],
+      \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+      \ 'ruby': ['rubocop'],
       \ 'elixir': ['mix_format'],
       \ 'javascript': ['prettier'],
       \ 'javascript.jsx': ['prettier'],
       \}
-let g:ale_linters = {
-      \ 'ruby': ['rubocop'],
-      \ 'elixir': ['mix_format'],
-      \ 'javascript': ['eslint'],
-      \}
+let g:ale_linters = {}
 
 let g:ale_enabled = 0
+let g:ale_disable_lsp = 1
 let g:ale_fix_on_save = 1
 let g:ale_sign_column_always = 1
 let g:ale_lint_delay=1000
 let g:ale_linters_explicit = 1
-let g:ale_ruby_rubocop_executable = 'bin/rubocop'
+let g:ale_ruby_rubocop_executable = 'bundle'
+" let g:ale_ruby_rubocop_options = "-A"
 
 """
 " Treesitter config
 """
 lua <<EOF
+vim.treesitter.highlighter.hl_map.error = nil
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
+  -- A list of parser names, or "all"
+  -- ensure_installed = { "c", "lua", "rust" },
+  ensure_installed = {"elixir", "rust", "ruby", "lua", "javascript", "typescript", "css", "html"},
+
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- List of parsers to ignore installing (for "all")
+  -- ignore_install = { "javascript" },
+  indent = {
+    enable = true,
+  },
+
   highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = { "c", "rust" },  -- list of language that will be disabled
+    -- `false` will disable the whole extension
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+    -- disable = { "c", "rust" },
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
   },
 }
+EOF
+
+
+"""
+" Harpoon
+"""
+lua << EOF
+require("telescope").load_extension('harpoon')
 EOF
 
 """
@@ -190,8 +231,8 @@ local on_attach = function(client, bufnr)
   -- buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   -- buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   -- buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   -- buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
@@ -199,18 +240,30 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = {"solargraph", "tsserver"}
+local servers = {"tsserver"}
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
+vim.opt.signcolumn = "yes" -- otherwise it bounces in and out, not strictly needed though
+-- vim.api.nvim_create_autocmd("FileType", {
+-- pattern = "ruby",
+-- group = vim.api.nvim_create_augroup("RubyLSP", { clear = true }), -- also this is not /needed/ but it's good practice
+-- callback = function()
+--   vim.lsp.start {
+--     name = "standard",
+--     cmd = { "bin/standard", "--lsp" },
+--   }
+-- end,
+--})
+
 EOF
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " better_whitespace
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:better_whitespace_enabled=1
-let g:strip_whitespace_on_save=1
-let g:strip_whitespace_confirm=0
+" let g:better_whitespace_enabled=1
+" let g:strip_whitespace_on_save=1
+" let g:strip_whitespace_confirm=0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " neoterm mode
@@ -232,15 +285,20 @@ highlight TermCursorNC ctermfg=4 guifg=none guibg=none
 hi ErrorMsg ctermfg=1 ctermbg=4 guifg=none guibg=none guisp=NONE cterm=NONE,reverse gui=NONE
 " hi Error ctermfg=160 ctermbg=4 guifg=#dc322f guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
 "
+"
+""""""
+" Hex Color setup
+""""""
+" lua require'colorizer'.setup()
 
 """"""
 " Neogit
 """"
-lua << EOF
-local neogit = require('neogit')
+" lua << EOF
+" local neogit = require('neogit')
 
-neogit.setup {}
-EOF
+" neogit.setup {}
+" EOF
 
 
 augroup wayland_clipboard

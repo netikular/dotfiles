@@ -26,8 +26,6 @@ if status --is-interactive
 
   ulimit -n 4096
 
-  test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
-
   set -x CFLAGS "-O2 -g -fno-stack-check"
   set -x KERL_CONFIGURE_OPTIONS "--disable-hipe --without-javac --with-ssl=/usr/local/opt/openssl@1.1"
   set -x RUBY_CONFIGURE_OPTS "--with-openssl-dir=/usr/local/opt/openssl@1.1"
@@ -53,7 +51,7 @@ set -x PATH $HOME/local/nvim/bin $PATH
 set -x PATH $HOME/bin $PATH
 set -x PATH $HOME/.local/bin $PATH
 set -x PATH $HOME/go/bin $PATH
-# set -x PATH $HOME/.cargo/bin $PATH
+set -x PATH $HOME/.cargo/bin $PATH
 set -x MANPATH $MANPATH /usr/local/opt/erlang/lib/erlang/man
 set -x TERM screen-256color
 

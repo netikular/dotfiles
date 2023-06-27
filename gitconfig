@@ -51,6 +51,7 @@
   tool = vimdiff
 [push]
   default = simple
+  autoSetupRemote = true
 [include]
   path = ~/.gitconfig.local
 [core]
@@ -61,6 +62,7 @@
 	hideCampaign = true
 [init]
 	templatedir = ~/.git_template
+	defaultBranch = main
 [user]
 	name = Kevin Pratt
 	email = kevin@paradem.co

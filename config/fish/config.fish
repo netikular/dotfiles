@@ -1,10 +1,6 @@
 # My Fish Config
 if status --is-interactive
-  if test (uname) = "Darwin"
-    ssh-add -q --apple-load-keychain
-  else
-    ssh-add -q
-  end
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 
   if set -q NVIM_LISTEN_ADDRESS
     set -x VISUAL "nvr -cc split --remote-wait +'set bufhidden=wipe'"
@@ -22,13 +18,13 @@ if status --is-interactive
   complete -c g -w git
   complete -c gpo -w git
   complete -c e -w emacs
-  complete -c p -a (cat $HOME"/.project_list") -x
 
   ulimit -n 4096
 
   set -x CFLAGS "-O2 -g -fno-stack-check"
-  set -x KERL_CONFIGURE_OPTIONS "--disable-hipe --without-javac --with-ssl=/usr/local/opt/openssl@1.1"
-  set -x RUBY_CONFIGURE_OPTS "--with-openssl-dir=/usr/local/opt/openssl@1.1"
+  set -x KERL_CONFIGURE_OPTIONS "--disable-hipe --without-javac --with-ssl=/opt/homebrew/opt/openssl@1.1"
+  set -x RUBY_CONFIGURE_OPTS "--with-openssl-dir=/opt/homebrew/opt/openssl@3"
+  set -x PKG_CONFIG_PATH "/opt/homebrew/opt/libpq/lib/pkgconfig"
 
 # The next line updates PATH for the Google Cloud SDK.
   if [ -f '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc' ]; . '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc'; end
@@ -50,9 +46,14 @@ set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
 set -x PATH $HOME/local/nvim/bin $PATH
 set -x PATH $HOME/bin $PATH
 set -x PATH $HOME/.local/bin $PATH
+set -x PATH $HOME/local/bin $PATH
 set -x PATH $HOME/go/bin $PATH
 set -x PATH $HOME/.cargo/bin $PATH
+set -x PATH /opt/homebrew/opt/postgresql@15/bin $PATH
 set -x MANPATH $MANPATH /usr/local/opt/erlang/lib/erlang/man
 set -x TERM screen-256color
+set -x HOMEBREW_NO_AUTO_UPDATE false
 
-
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH

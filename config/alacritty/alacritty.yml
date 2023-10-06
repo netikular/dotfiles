@@ -170,7 +170,7 @@ font:
   #
   # Thin strokes are suitable for retina displays, but for non-retina screens
   # it is recommended to set `use_thin_strokes` to `false`.
-  use_thin_strokes: false
+  # use_thin_strokes: false
 
 
 # If `true`, bold text is drawn using the bright color variants.
@@ -452,10 +452,10 @@ live_config_reload: true
 #   - (macOS) /bin/bash --login
 #   - (Linux/BSD) user login shell
 #   - (Windows) powershell
-#shell:
-#  program: /bin/bash
-#  args:
-#    - --login
+# shell:
+#  program: /opt/homebrew/bin/fish
+ # args:
+ #   - --login
 
 # Startup directory
 #

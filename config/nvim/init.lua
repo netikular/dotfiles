@@ -53,6 +53,21 @@ require('lazy').setup({
     },
   },
   {
+    -- Autocompletion
+    'hrsh7th/nvim-cmp',
+    dependencies = {
+      -- Snippet Engine & its associated nvim-cmp source
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
+
+      -- Adds LSP completion capabilities
+      'hrsh7th/cmp-nvim-lsp',
+
+      -- Adds a number of user-friendly snippets
+      -- 'rafamadriz/friendly-snippets',
+    },
+  },
+  {
     "nvim-tree/nvim-tree.lua",
     version = "*",
     dependencies = {
@@ -254,6 +269,9 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- vim.g.terminal_emulator = "/opt/homebrew/bin/fish"
+vim.opt.shell = "fish"
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -316,7 +334,7 @@ vim.keymap.set('n', '<leader>b', require('telescope.builtin').buffers, { desc = 
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'lua', 'vim', 'help', 'ruby', 'heex', 'eex', 'elixir' },
+  ensure_installed = { 'lua', 'vim', 'ruby', 'heex', 'eex', 'elixir' },
   --'rust', 'tsx', 'typescript', 'help', 'vim', 'elixir',
   --'eex', 'heex' },
 
@@ -450,7 +468,7 @@ local servers = {
   -- prettierd = {},
   standardrb = {},
   elixirls = {},
-  -- tailwindcss = {},
+  tailwindcss = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -464,6 +482,7 @@ require('neodev').setup()
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Setup mason so it can manage external tooling
 require('mason').setup()
@@ -490,6 +509,22 @@ mason_lspconfig.setup_handlers {
 -- local util = require "formatter.util"
 
 -- Provides the Format, FormatWrite, FormatLock, and FormatWriteLock commands
+--
+local formatFun = {
+  function()
+    return {
+      exe = "rustywind",
+      args = { "--stdin" },
+      stdin = true
+    }
+  end,
+  function()
+    return {
+      exe = "htmlbeautifier",
+      stdin = true
+    }
+  end
+}
 require("formatter").setup {
   -- Enable or disable logging
   logging = true,
@@ -500,22 +535,26 @@ require("formatter").setup {
     javascript = {
       require("formatter.filetypes.javascript").standard
     },
-    html = {
+    html = formatFun,
+    eruby = formatFun,
+    eelixir = formatFun,
+    elixir = {
       function()
         return {
-          exe = "htmlbeautifier",
+          exe = "rustywind",
+          args = { "--stdin" },
+          stdin = true
+        }
+      end,
+      function()
+        return {
+          exe = "rustywind",
+          args = { "--stdin", "--custom-regex \"class: \\\"([_a-zA\\.-Z0-9\\-:\\[\\] ]+)\"" },
           stdin = true
         }
       end
-    },
-    eruby = {
-      function()
-        return {
-          exe = "htmlbeautifier",
-          stdin = true
-        }
-      end
-    },
+    }
+    ,
     ["*"] = {
       require("formatter.filetypes.any").remove_trailing_whitespace
     }
@@ -529,6 +568,54 @@ null_ls.setup({
     null_ls.builtins.diagnostics.credo,
   },
 })
+
+-- [[ Configure nvim-cmp ]]
+-- See `:help cmp`
+local cmp = require 'cmp'
+local luasnip = require 'luasnip'
+require('luasnip.loaders.from_vscode').lazy_load()
+luasnip.config.setup {}
+
+cmp.setup {
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert {
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete {},
+    ['<CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_locally_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.locally_jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+  },
+}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

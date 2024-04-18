@@ -27,9 +27,27 @@ require('lazy').setup({
 
   'kassio/neoterm',
   'catppuccin/vim',
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' }
+  },
   'tpope/vim-surround',
   -- Git related plugins
   'tpope/vim-fugitive',
+  {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",  -- required
+      "sindrets/diffview.nvim", -- optional - Diff integration
+
+      -- Only one of these is needed, not both.
+      "nvim-telescope/telescope.nvim", -- optional
+    },
+    config = {
+      kind = "split_above"
+    }
+  },
+  'tpope/vim-abolish',
   'tpope/vim-rhubarb',
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -57,7 +75,13 @@ require('lazy').setup({
     'hrsh7th/nvim-cmp',
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
-      'L3MON4D3/LuaSnip',
+      {
+        "L3MON4D3/LuaSnip",
+        -- follow latest release.
+        version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+        -- install jsregexp (optional!).
+        build = "make install_jsregexp"
+      },
       'saadparwaiz1/cmp_luasnip',
 
       -- Adds LSP completion capabilities
@@ -97,14 +121,24 @@ require('lazy').setup({
       },
     },
   },
-  {
-    'ishan9299/nvim-solarized-lua',
-    config = function()
-      vim.cmd.colorscheme 'solarized-flat'
-    end,
-  },
+  -- 'altercation/vim-colors-solarized',
+  'folke/tokyonight.nvim',
+  'ishan9299/nvim-solarized-lua',
+  -- {
+  -- 'ishan9299/nvim-solarized-lua',
+  --   config = function()
+  --     vim.cmd.colorscheme 'solarized-flat'
+  --   end,
+  -- },
+  -- {
+  --   'altercation/vim-colors-solarized',
+  --   config = function()
+  --     vim.cmd.colorscheme 'solarized'
+  --   end,
+  -- },
 
-  -- 'tjdevries/colorbuddy.nvim',
+  "morhetz/gruvbox",
+  "loctvl842/monokai-pro.nvim",
   -- {
   --   'svrana/neosolarized.nvim',
   --   config = function()
@@ -182,7 +216,7 @@ vim.g.neoterm_autoinsert = 1
 vim.g.neoterm_default_mod = "botright"
 vim.g['test#strategy'] = 'neoterm'
 
-vim.opt.cmdheight = 2
+vim.opt.cmdheight = 1
 
 vim.opt.guicursor = nil
 vim.opt.expandtab = true
@@ -200,6 +234,8 @@ vim.opt.shiftwidth = 2
 vim.opt.foldlevel = 20
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
+vim.api.nvim_command('set shortmess-=I')
 
 vim.o.winwidth = 84
 vim.o.winheight = 10
@@ -258,6 +294,8 @@ vim.o.smartcase = true
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
 
+vim.o.showmode = false
+
 -- Decrease update time
 vim.o.updatetime = 250
 vim.o.timeout = true
@@ -283,6 +321,12 @@ vim.keymap.set({ 'n', 'v', 'i' }, '<s-down>', '<Nop>')
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- habamax
+-- solarized-flat
+-- gruvbox
+vim.cmd.colorscheme "tokyonight-night"
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -322,12 +366,23 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>f', require('telescope.builtin').find_files, { desc = '[F]iles' })
+vim.keymap.set('n', '<leader>f', function()
+  require('telescope.builtin').find_files({ hidden = false, })
+end, { desc = '[F]iles' })
+vim.keymap.set('n', '<leader>F', function()
+  require('telescope.builtin').find_files({ hidden = true, })
+end, { desc = '[F]iles' })
 vim.keymap.set('n', '<leader>h', require('telescope.builtin').help_tags, { desc = '[H]elp' })
 vim.keymap.set('n', '<leader>w', require('telescope.builtin').grep_string, { desc = '[W]ord' })
-vim.keymap.set('n', '<leader>s', require('telescope.builtin').live_grep, { desc = '[G]rep' })
+vim.keymap.set('n', '<leader>s', function()
+  require('telescope.builtin').live_grep({ use_regex = false, })
+end, { desc = '[G]rep' })
+vim.keymap.set('n', '<leader>S', function()
+  require('telescope.builtin').live_grep({ use_regex = true, })
+end, { desc = '[G]rep with regex' })
 vim.keymap.set('n', '<leader>d', require('telescope.builtin').diagnostics, { desc = '[D]iagnostics' })
 vim.keymap.set('n', '<leader>b', require('telescope.builtin').buffers, { desc = '[B]uffers' })
+vim.keymap.set('n', '<leader>z', require('telescope.builtin').treesitter, { desc = '[B]uffers' })
 
 
 -- [[ Configure Treesitter ]]
@@ -615,6 +670,57 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
   },
+}
+
+
+-- lualine
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    theme = 'auto',
+    -- component_separators = { left = '', right = '' },
+    component_separators = "",
+    -- section_separators = { left = '', right = '' },
+    section_separators = "",
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+    }
+  },
+  sections = {
+    lualine_a = { 'mode' },
+    lualine_b = { 'diagnostics' },
+    lualine_c = { 'filename' },
+    lualine_x = { 'encoding', 'fileformat', 'filetype' },
+    lualine_y = { 'progress' },
+    lualine_z = { 'location' }
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = { 'filename' },
+    lualine_x = { 'location' },
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+}
+
+-- Neogit
+local neogit = require('neogit')
+neogit.setup {
+  kind = "split_above"
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`

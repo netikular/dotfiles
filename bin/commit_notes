@@ -1,0 +1,3 @@
+#!/usr/bin/env fish
+
+tmux new-session -d "commit_notes_git"

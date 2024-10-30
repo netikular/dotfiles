@@ -1,0 +1,4 @@
+#!/usr/bin/env fish
+
+mbsync -c ~/.config/paradem.isyncrc paradem
+notmuch --config ~/.config/notmuch/default/config new

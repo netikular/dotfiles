@@ -1,0 +1,6 @@
+#!/usr/bin/env fish
+
+pushd ~/Projects/notes
+nvim -c "Telescope find_files"
+commit_notes
+popd

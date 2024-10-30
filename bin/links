@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require 'uri'
+
+
+content = $stdin.readlines.join
+urls = URI.extract(content, ["http", "https"])
+puts urls.reject(&:empty?).join("\n")
+
+

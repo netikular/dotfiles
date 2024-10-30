@@ -1,0 +1,6 @@
+#!/usr/bin/env fish
+
+pushd ~/Projects/notes
+vim $(date +%Y-%m-%d).md
+commit_notes
+popd

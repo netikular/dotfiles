@@ -1,0 +1,4 @@
+#!/usr/bin/env fish
+
+mbsync -c ~/.config/ouelong.isyncrc ouelong
+notmuch --config ~/.config/notmuch/ouelong/config new

@@ -1,0 +1,6 @@
+#!/usr/bin/env fish
+
+pushd ~/Projects/notes
+vim (yesterday_rb)
+commit_notes
+popd

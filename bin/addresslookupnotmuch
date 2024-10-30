@@ -1,0 +1,3 @@
+#!/bin/bash
+
+notmuch address --sort newest-first "$1" | ag --nocolor "$1"

@@ -31,6 +31,67 @@ require('lazy').setup({
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' }
   },
+  -- {
+  --   'MeanderingProgrammer/render-markdown.nvim',
+  --   opts = {},
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+  -- },
+  {
+    "epwalsh/obsidian.nvim",
+    version = "*", -- recommended, use latest release instead of latest commit
+    lazy = true,
+    ft = "markdown",
+    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+    -- event = {
+    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
+    --   -- refer to `:h file-pattern` for more examples
+    --   "BufReadPre " .. vim.fn.expand "~" .. "/Projects/notes/*.md",
+    --   "BufReadPre " .. vim.fn.expand "~" .. "/Projects/notes/*.md",
+    -- },
+    dependencies = {
+      -- Required.
+      "nvim-lua/plenary.nvim",
+
+      -- see below for full list of optional dependencies 👇
+    },
+    opts = {
+      ui = {
+        enable = true
+      },
+      workspaces = {
+        {
+          name = "Notes",
+          path = "~/Projects/notes",
+        },
+        {
+          name = "Paradem",
+          path = "~/Projects/work_notes",
+        },
+        -- {
+        --   name = "work",
+        --   path = "~/vaults/work",
+        -- },
+      },
+      templates = {
+        folder = "templates",
+        date_format = "%Y-%m-%d",
+        time_format = "%H:%M",
+      },
+      -- Optional, by default when you use `:ObsidianFollowLink` on a link to an external
+      -- URL it will be ignored but you can customize this behavior here.
+      ---@param url string
+      follow_url_func = function(url)
+        -- Open the URL in the default web browser.
+        vim.fn.jobstart({ "open", url }) -- Mac OS
+        -- vim.fn.jobstart({"xdg-open", url})  -- linux
+        -- vim.cmd(':silent exec "!start ' .. url .. '"') -- Windows
+        -- vim.ui.open(url) -- need Neovim 0.10.0+
+      end,
+    },
+  },
   'tpope/vim-surround',
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -60,14 +121,31 @@ require('lazy').setup({
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
+      { "ttytm/mason-lspconfig.nvim", branch = "ts-ls" },
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',          tag = 'legacy',  opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
+    },
+  },
+  {
+    "christoomey/vim-tmux-navigator",
+    cmd = {
+      "TmuxNavigateLeft",
+      "TmuxNavigateDown",
+      "TmuxNavigateUp",
+      "TmuxNavigateRight",
+      "TmuxNavigatePrevious",
+    },
+    keys = {
+      { "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
+      { "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
+      { "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
+      { "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
+      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
     },
   },
   {
@@ -119,6 +197,7 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      signs_staged_enable = false,
     },
   },
   -- 'altercation/vim-colors-solarized',
@@ -164,7 +243,7 @@ require('lazy').setup({
   --   end
   -- },
 
-  "jose-elias-alvarez/null-ls.nvim",
+  -- "jose-elias-alvarez/null-ls.nvim",
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim',         opts = {} },
@@ -263,6 +342,8 @@ vim.keymap.set('n', '<leader>tn', ':wa<cr>:TestNearest<cr>')
 vim.keymap.set('n', '<leader>tf', ':wa<cr>:TestFile<cr>')
 vim.keymap.set('n', '<leader>tl', ':wa<cr>:TestLast<cr>')
 vim.keymap.set('n', '<leader>r', ':FormatWrite<cr>')
+vim.keymap.set('n', '<leader>ol', ':ObsidianFollowLink<cr>')
+vim.keymap.set('n', '<leader>ot', ':ObsidianToday<cr>')
 -- [[ Setting options ]]
 -- See `:help vim.o`
 
@@ -511,17 +592,20 @@ end
 --
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
+--
 local servers = {
   -- clangd = {},
-  -- gopls = {},
+  gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  tsserver = {},
+  -- tsserver = {},
+  ts_ls = {},
   -- solargraph = {},
   -- ruby_ls = {},
   -- html = {},
   -- prettierd = {},
-  standardrb = {},
+  -- standardrb = {},
+  zls = {},
   elixirls = {},
   tailwindcss = {},
   lua_ls = {
@@ -547,8 +631,17 @@ local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
-  automatic_installation = true,
+  automatic_installation = false,
 }
+
+require('lspconfig').standardrb.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  settings = {}
+}
+
+require('lspconfig').gleam.setup({})
+
 
 mason_lspconfig.setup_handlers {
   function(server_name)
@@ -566,13 +659,14 @@ mason_lspconfig.setup_handlers {
 -- Provides the Format, FormatWrite, FormatLock, and FormatWriteLock commands
 --
 local formatFun = {
-  function()
-    return {
-      exe = "rustywind",
-      args = { "--stdin" },
-      stdin = true
-    }
-  end,
+  -- function()
+  --   return {
+  --     exe = "rustywind",
+  --     args = { "--stdin" },
+  --     stdin = true
+  --   }
+  -- end
+  -- ,
   function()
     return {
       exe = "htmlbeautifier",
@@ -616,13 +710,22 @@ require("formatter").setup {
   }
 }
 
-local null_ls = require("null-ls")
-
-null_ls.setup({
-  sources = {
-    null_ls.builtins.diagnostics.credo,
-  },
+local augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
+augroup("__formatter__", { clear = true })
+autocmd("BufWritePost", {
+  group = "__formatter__",
+  command = ":FormatWrite",
 })
+
+-- NULL LS isn't working correctly and I think that it is going to be deprecated?
+-- local null_ls = require("null-ls")
+--
+-- null_ls.setup({
+--   sources = {
+--     null_ls.builtins.diagnostics.credo,
+--   },
+-- })
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
@@ -671,6 +774,15 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+-- Markdown files
+vim.api.nvim_create_autocmd('BufEnter', {
+  callback = function(opts)
+    if vim.bo[opts.buf].filetype == 'markdown' then
+      vim.opt.conceallevel = 2
+    end
+  end,
+})
 
 
 -- lualine
@@ -722,6 +834,15 @@ local neogit = require('neogit')
 neogit.setup {
   kind = "split_above"
 }
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.wrap = true
+    vim.opt_local.textwidth = 80
+  end,
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

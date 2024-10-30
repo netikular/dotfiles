@@ -42,7 +42,9 @@ end
 
 # Variables
 set -x EDITOR nvim
+set -x VISUAL nvim
 set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
+set -x PATH /opt/homebrew/Cellar/bash/5.2.32/bin $PATH
 set -x PATH $HOME/local/nvim/bin $PATH
 set -x PATH $HOME/bin $PATH
 set -x PATH $HOME/.local/bin $PATH
@@ -52,7 +54,8 @@ set -x PATH $HOME/.cargo/bin $PATH
 set -x PATH /opt/homebrew/opt/postgresql@15/bin $PATH
 set -x MANPATH $MANPATH /usr/local/opt/erlang/lib/erlang/man
 set -x TERM screen-256color
-set -x HOMEBREW_NO_AUTO_UPDATE false
+set -x HOMEBREW_NO_AUTO_UPDATE 1
+set -x XDG_CONFIG_HOME ~/.config
 
 # bun
 set --export BUN_INSTALL "$HOME/.bun"
@@ -95,4 +98,18 @@ set -g fish_pager_color_prefix $cyan
 set -g fish_pager_color_completion $foreground
 set -g fish_pager_color_description $comment
 set -g fish_pager_color_selected_background --background=$selection
-  
+
+atuin init fish | source
+
+oh-my-posh init fish --config ~/.config/zen.toml | source
+
+function set_poshcontext --no-scope-shadowing
+  set --export FISH__BIND_MODE $fish_bind_mode
+end
+
+function rerender_on_bind_mode_change --on-variable fish_bind_mode
+    if test "$fish_bind_mode" != paste
+        omp_repaint_prompt
+    end
+end
+set_poshcontext

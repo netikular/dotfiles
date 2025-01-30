@@ -18,18 +18,71 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- NOTE: Here is where you install your plugins.
+--
 --  You can configure plugins using the `config` key.
 --
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
-  -- NOTE: First, some plugins that don't require any configuration
-
   'kassio/neoterm',
+  'preservim/vimux',
   'catppuccin/vim',
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' }
+  },
+  {
+    "isak102/ghostty.nvim",
+    config = function()
+      require("ghostty").setup()
+    end,
+  },
+  {
+    'netikular/dashboard-nvim',
+    event = 'VimEnter',
+    config = function()
+      require('dashboard').setup {
+        theme = 'hyper',
+        config = {
+          week_header = {
+            enable = false,
+          },
+          header = {
+            "┌───────────────────────────────────────────────────────────────┐",
+            "│                                                               │",
+            "│                                                               │",
+            "│                                                               │",
+            "│  ██████╗  █████╗ ██████╗  █████╗ ██████╗ ███████╗███╗   ███╗  │",
+            "│  ██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝████╗ ████║  │",
+            "│  ██████╔╝███████║██████╔╝███████║██║  ██║█████╗  ██╔████╔██║  │",
+            "│  ██╔═══╝ ██╔══██║██╔══██╗██╔══██║██║  ██║██╔══╝  ██║╚██╔╝██║  │",
+            "│  ██║     ██║  ██║██║  ██║██║  ██║██████╔╝███████╗██║ ╚═╝ ██║  │",
+            "│  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝     ╚═╝  │",
+            "│                                                               │",
+            "│                                                               │",
+            "└───────────────────────────────────────────────────────────────┘",
+            "                                                                 ",
+            "                                                                 ",
+            "                                                                 ",
+            "                                                                 ",
+            "                                                                 ",
+          },
+          shortcut = {
+            {
+              desc = " Config",
+              action = "e ~/.config/nvim/init.lua",
+              key = "e",
+            },
+            { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
+            { desc = 'Quit', group = '@property', action = 'q', key = 'q' },
+          },
+          project = { enable = false },
+          mru = { enable = false },
+          footer = {}
+        },
+      }
+    end,
+    dependencies = { { 'nvim-tree/nvim-web-devicons' } }
   },
   -- {
   --   'MeanderingProgrammer/render-markdown.nvim',
@@ -121,31 +174,14 @@ require('lazy').setup({
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
-      { "ttytm/mason-lspconfig.nvim", branch = "ts-ls" },
+      { "williamboman/mason-lspconfig.nvim" },
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',          tag = 'legacy',  opts = {} },
+      { 'j-hui/fidget.nvim',                tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
-    },
-  },
-  {
-    "christoomey/vim-tmux-navigator",
-    cmd = {
-      "TmuxNavigateLeft",
-      "TmuxNavigateDown",
-      "TmuxNavigateUp",
-      "TmuxNavigateRight",
-      "TmuxNavigatePrevious",
-    },
-    keys = {
-      { "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
-      { "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
-      { "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
-      { "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
-      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
     },
   },
   {
@@ -201,7 +237,25 @@ require('lazy').setup({
     },
   },
   -- 'altercation/vim-colors-solarized',
-  'folke/tokyonight.nvim',
+  {
+    'folke/tokyonight.nvim',
+    config = function()
+      require("tokyonight").setup({
+        -- use the night style
+        style = "night",
+        -- disable italic for functions
+        styles = {
+          functions = { italic = false },
+          keywords = { italic = false }
+        },
+        -- Change the "hint" color to the "orange" color, and make the "error" color bright red
+        on_colors = function(colors)
+          colors.hint = colors.orange
+          colors.error = "#ff0000"
+        end
+      })
+    end,
+  },
   'ishan9299/nvim-solarized-lua',
   -- {
   -- 'ishan9299/nvim-solarized-lua',
@@ -293,11 +347,13 @@ require('lazy').setup({
 --[[Global options]]
 vim.g.neoterm_autoinsert = 1
 vim.g.neoterm_default_mod = "botright"
-vim.g['test#strategy'] = 'neoterm'
+vim.g['test#strategy'] = 'vimux'
+vim.g['test#preserve_screen'] = false
 
 vim.opt.cmdheight = 1
 
-vim.opt.guicursor = nil
+vim.opt.guicursor =
+"n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait100-blinkoff150-blinkon175,sm:block-blinkwait175-blinkoff150-blinkon175"
 vim.opt.expandtab = true
 vim.opt.smartindent = false
 vim.opt.wrap = false
@@ -341,6 +397,9 @@ vim.keymap.set('n', '<a-l>', '<c-w>l')
 vim.keymap.set('n', '<leader>tn', ':wa<cr>:TestNearest<cr>')
 vim.keymap.set('n', '<leader>tf', ':wa<cr>:TestFile<cr>')
 vim.keymap.set('n', '<leader>tl', ':wa<cr>:TestLast<cr>')
+vim.keymap.set('n', '<leader>ts', ':wa<cr>:TestSuite<cr>')
+vim.keymap.set('n', '<leader>vv', ':VimuxZoomRunner<cr>')
+vim.keymap.set('n', '<leader>vo', ':VimuxOpenRunner<cr>')
 vim.keymap.set('n', '<leader>r', ':FormatWrite<cr>')
 vim.keymap.set('n', '<leader>ol', ':ObsidianFollowLink<cr>')
 vim.keymap.set('n', '<leader>ot', ':ObsidianToday<cr>')
@@ -434,10 +493,12 @@ require('telescope').setup {
 }
 
 -- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
+require('telescope').load_extension('fzf')
+-- require("telescope").load_extension("file_browser")
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
+vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
@@ -451,7 +512,7 @@ vim.keymap.set('n', '<leader>f', function()
   require('telescope.builtin').find_files({ hidden = false, })
 end, { desc = '[F]iles' })
 vim.keymap.set('n', '<leader>F', function()
-  require('telescope.builtin').find_files({ hidden = true, })
+  require('telescope.builtin').find_files({ no_ignore = true, hidden = true, })
 end, { desc = '[F]iles' })
 vim.keymap.set('n', '<leader>h', require('telescope.builtin').help_tags, { desc = '[H]elp' })
 vim.keymap.set('n', '<leader>w', require('telescope.builtin').grep_string, { desc = '[W]ord' })
@@ -464,6 +525,8 @@ end, { desc = '[G]rep with regex' })
 vim.keymap.set('n', '<leader>d', require('telescope.builtin').diagnostics, { desc = '[D]iagnostics' })
 vim.keymap.set('n', '<leader>b', require('telescope.builtin').buffers, { desc = '[B]uffers' })
 vim.keymap.set('n', '<leader>z', require('telescope.builtin').treesitter, { desc = '[B]uffers' })
+vim.keymap.set('n', '<leader>r', require('telescope.builtin').treesitter, { desc = '[B]uffers' })
+vim.keymap.set('n', '<leader>l', '<cmd>Telescope resume<cr>', {})
 
 
 -- [[ Configure Treesitter ]]
@@ -544,7 +607,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
+local on_attach = function(first, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
   -- many times.
@@ -578,13 +641,13 @@ local on_attach = function(_, bufnr)
   nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
   nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
   nmap('<leader>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    -- print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
 
   -- Create a command `:Format` local to the LSP buffer
-  -- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-  --   vim.lsp.buf.format()
-  -- end, { desc = 'Format current buffer with LSP' })
+  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(client)
+    vim.lsp.buf.format()
+  end, { desc = 'Format current buffer with LSP' })
 end
 
 -- Enable the following language servers
@@ -599,7 +662,8 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-  ts_ls = {},
+  -- ts_ls = {},
+  -- standardjs = {},
   -- solargraph = {},
   -- ruby_ls = {},
   -- html = {},
@@ -641,6 +705,32 @@ require('lspconfig').standardrb.setup {
 }
 
 require('lspconfig').gleam.setup({})
+
+-- require('lspconfig').ts_ls.setup({
+--   capabilities = capabilities,
+--   on_attach = function(client, _bufnr)
+--     print("Pies")
+--     print(vim.inspect(client))
+--     -- Disable tsserver's formatting to use another formatter like prettier
+--     client.server_capabilities.documentFormattingProvider = false
+--   end,
+--   settings = {
+--     typescript = {
+--       format = {
+--         insertSpaceAfterFunctionKeywordForAnonymousFunctions = true,
+--         insertSpaceAfterFunctionKeywordForFunctions = true, -- This should add a space after function name
+--         insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = true
+--       }
+--     },
+--     javascript = {
+--       format = {
+--         insertSpaceAfterFunctionKeywordForAnonymousFunctions = true,
+--         insertSpaceAfterFunctionKeywordForFunctions = true,
+--         insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = true
+--       }
+--     }
+--   }
+-- })
 
 
 mason_lspconfig.setup_handlers {
@@ -684,6 +774,9 @@ require("formatter").setup {
     javascript = {
       require("formatter.filetypes.javascript").standard
     },
+    typescript = {
+      require("formatter.filetypes.javascript").standard
+    },
     html = formatFun,
     eruby = formatFun,
     eelixir = formatFun,
@@ -713,7 +806,7 @@ require("formatter").setup {
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 augroup("__formatter__", { clear = true })
-autocmd("BufWritePost", {
+autocmd("BufWritePre", {
   group = "__formatter__",
   command = ":FormatWrite",
 })
@@ -802,9 +895,9 @@ require('lualine').setup {
     always_divide_middle = true,
     globalstatus = false,
     refresh = {
-      statusline = 1000,
-      tabline = 1000,
-      winbar = 1000,
+      statusline = 100,
+      tabline = 100,
+      winbar = 100,
     }
   },
   sections = {

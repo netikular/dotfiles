@@ -26,24 +26,33 @@ if status --is-interactive
   set -x RUBY_CONFIGURE_OPTS "--with-openssl-dir=/opt/homebrew/opt/openssl@3"
   set -x PKG_CONFIG_PATH "/opt/homebrew/opt/libpq/lib/pkgconfig"
 
-# The next line updates PATH for the Google Cloud SDK.
+  # The next line updates PATH for the Google Cloud SDK.
   if [ -f '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc' ]; . '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc'; end
 
-  if test -e $HOME"/.asdf/asdf.fish"
-    source ~/.asdf/asdf.fish
-  end
+  # if test -e $HOME"/.asdf/asdf.fish"
+  #   source ~/.asdf/asdf.fish
+  # end
 
   if test -e $HOME"/.config.local.fish"
     source $HOME"/.config.local.fish"
   end
 
-  eval (direnv hook fish)
+  /Users/kevin/.local/bin/mise activate fish | source
+
+  # eval (direnv hook fish)
+
+  atuin init fish | source
+
+  oh-my-posh init fish --config ~/.config/zen.toml | source
+
 end
 
 # Variables
+set -x LC_ALL "en_CA.UTF-8"
 set -x EDITOR nvim
 set -x VISUAL nvim
 set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
+set -x PATH $HOME/.cache/rebar3/bin:$PATH
 set -x PATH /opt/homebrew/Cellar/bash/5.2.32/bin $PATH
 set -x PATH $HOME/local/nvim/bin $PATH
 set -x PATH $HOME/bin $PATH
@@ -52,8 +61,10 @@ set -x PATH $HOME/local/bin $PATH
 set -x PATH $HOME/go/bin $PATH
 set -x PATH $HOME/.cargo/bin $PATH
 set -x PATH /opt/homebrew/opt/postgresql@15/bin $PATH
+set -x PATH /Applications/Ghostty.app/Contents/MacOS $PATH
 set -x MANPATH $MANPATH /usr/local/opt/erlang/lib/erlang/man
-set -x TERM screen-256color
+# set -x TERM xterm-ghostty
+# set -x TERM screen-256color
 set -x HOMEBREW_NO_AUTO_UPDATE 1
 set -x XDG_CONFIG_HOME ~/.config
 
@@ -99,10 +110,6 @@ set -g fish_pager_color_completion $foreground
 set -g fish_pager_color_description $comment
 set -g fish_pager_color_selected_background --background=$selection
 
-atuin init fish | source
-
-oh-my-posh init fish --config ~/.config/zen.toml | source
-
 function set_poshcontext --no-scope-shadowing
   set --export FISH__BIND_MODE $fish_bind_mode
 end
@@ -113,3 +120,19 @@ function rerender_on_bind_mode_change --on-variable fish_bind_mode
     end
 end
 set_poshcontext
+
+# set desired cursor styles
+# NOTE: this will be necessary even in fish version with above PR released
+set -U fish_cursor_default "block"
+set -U fish_cursor_insert "line" "blink"
+set -U fish_cursor_replace_one "underscore"
+set -U fish_cursor_visual "block"
+
+# enable vi cursor in Ghostty.
+# NOTE: This won't be necessary when the PR above
+#       gets released in some version of fish shell
+if status is-interactive
+    if string match -q -- '*ghostty*' $TERM
+        set -g fish_vi_force_cursor 1
+    end
+end

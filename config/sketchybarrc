@@ -1,0 +1,64 @@
+#!/bin/sh
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+source "/Users/kevin/.config/scripts/palette.sh"
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+ITEM_DIR="$CONFIG_DIR/items"
+
+bar=(
+  blur_radius=5
+  color="$(hex_to_rgba '000000' 'ff')"
+  corner_radius=0
+  height=32
+  position=top
+  y_offset=0
+)
+
+default=(
+  background.color="$(hex_to_rgba $bg4)"
+  background.corner_radius=6
+  background.drawing=on
+  background.height=20
+  icon.color="$(hex_to_rgba $grey)"
+  icon.font="Monaco Nerd Font:Bold:12.0"
+  icon.padding_left=12
+  icon.padding_right=8
+  label.color="$(hex_to_rgba $fg)"
+  label.font="Monaco Nerd Font:Bold:14.0"
+  label.padding_left=0
+  label.padding_right=12
+  padding_left=4
+  padding_right=4
+  updates=on
+)
+
+sketchybar --bar  "${bar[@]}"
+sketchybar --default "${default[@]}"
+
+sketchybar --add event aerospace_workspace_change
+
+for sid in $(aerospace list-workspaces --monitor 1); do
+  sketchybar --add item space.$sid left \
+             --subscribe space.$sid space_windows_change aerospace_workspace_change \
+             --set space.$sid \
+             drawing=off \
+             icon="$sid" \
+             label.font="sketchybar-app-font:Regular:11.0" \
+             script="$PLUGIN_DIR/aerospace.sh $sid"
+done
+
+sketchybar --add item clock right \
+           --set clock update_freq=10 icon=  script="$PLUGIN_DIR/clock.sh" \
+           --add item volume right \
+           --set volume script="$PLUGIN_DIR/volume.sh" \
+           --subscribe volume volume_change \
+           --add item note right \
+           --set note background.color="$(hex_to_rgba '000000' 'ff')" label=""\
+           --add item timer right \
+           --set timer background.color="$(hex_to_rgba '000000' 'ff')" update_freq=1 script="$PLUGIN_DIR/harvest.sh"\
+           #
+           # --set havrest update_freq=10 icon=3 script="$PLUGIN_DIR/harvest.sh"
+
+sketchybar --update

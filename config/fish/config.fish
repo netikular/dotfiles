@@ -33,8 +33,8 @@ if status --is-interactive
   #   source ~/.asdf/asdf.fish
   # end
 
-  if test -e $HOME"/.config.local.fish"
-    source $HOME"/.config.local.fish"
+  if test -e $HOME"/.env.local.fish"
+    source $HOME"/.env.local.fish"
   end
 
   /Users/kevin/.local/bin/mise activate fish | source
@@ -63,10 +63,16 @@ set -x PATH $HOME/.cargo/bin $PATH
 set -x PATH /opt/homebrew/opt/postgresql@15/bin $PATH
 set -x PATH /Applications/Ghostty.app/Contents/MacOS $PATH
 set -x MANPATH $MANPATH /usr/local/opt/erlang/lib/erlang/man
-# set -x TERM xterm-ghostty
+set -x TERM xterm-ghostty
 # set -x TERM screen-256color
 set -x HOMEBREW_NO_AUTO_UPDATE 1
 set -x XDG_CONFIG_HOME ~/.config
+fish_add_path /opt/homebrew/opt/curl/bin
+fish_add_path /opt/homebrew/opt/mysql-client/bin
+fish_add_path /opt/homebrew/opt/libpq/bin
+
+# set -gx LDFLAGS "-L/opt/homebrew/opt/mysql-client/lib"
+# set -gx CPPFLAGS "-I/opt/homebrew/opt/mysql-client/include"
 
 # bun
 set --export BUN_INSTALL "$HOME/.bun"
@@ -135,4 +141,41 @@ if status is-interactive
     if string match -q -- '*ghostty*' $TERM
         set -g fish_vi_force_cursor 1
     end
+end
+
+# opencode
+fish_add_path /Users/kevin/.opencode/bin
+
+# Added by LM Studio CLI (lms)
+set -gx PATH $PATH /Users/kevin/.lmstudio/bin
+# End of LM Studio CLI section
+
+# Best way to get these functions installed into all fish sessions
+
+function create_timer
+  set issue $argv[1]
+  set title (gh issue view $issue --jq .title --json title)
+  harvest_cli -t $issue -n "$title"
+end
+
+function create_timer_trello
+  set issue $argv[1]
+  set title (trello_cli -c "$issue" -f title)
+  harvest_cli -t $issue -n "$title"
+end
+
+function dev_issue_trello
+  set issue $argv[1]
+  set title (trello_cli -c "$issue" -f title)
+  set branch_name (echo $issue"_"$title | string lower | string replace -a ' ' '_' | string replace -ar '[^a-z0-9_]' '')
+  git checkout -b $branch_name
+  harvest_cli -t $issue -n "$title"
+end
+
+
+function dev_issue
+  set issue $argv[1]
+  gh issue develop $issue -c
+  set title (gh issue view $issue --jq .title --json title)
+  harvest_cli -t $issue -n "$title"
 end

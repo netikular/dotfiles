@@ -17,6 +17,11 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Plugins I don't use?
+-- "tpope/vim-fugitive",
+-- "tpope/vim-rhubarb",
+-- "kassio/neoterm",
+--
 -- NOTE: Here is where you install your plugins.
 --
 --  You can configure plugins using the `config` key.
@@ -27,12 +32,9 @@ require("lazy").setup({
 
 	"numToStr/Comment.nvim",
 	"vim-test/vim-test",
-	"kassio/neoterm",
 	"preservim/vimux",
 	"tpope/vim-surround",
-	"tpope/vim-fugitive",
 	"tpope/vim-abolish",
-	"tpope/vim-rhubarb",
 	-- Detect tabstop and shiftwidth automatically
 	"tpope/vim-sleuth",
 	{
@@ -292,8 +294,8 @@ require("lazy").setup({
 				gopls = {},
 				ts_ls = {},
 				-- One of these will be the one.....
-				standardrb = {},
-				ruby_lsp = {},
+				-- standardrb = {},
+				-- ruby_lsp = {},
 
 				zls = {},
 
@@ -329,6 +331,8 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
+				-- "standardrb",
+				"vale",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -348,7 +352,24 @@ require("lazy").setup({
 			})
 		end,
 	},
-
+	{
+		"mfussenegger/nvim-lint",
+		config = function()
+			require("lint").linters_by_ft = {
+				markdown = { "vale" },
+				gitcommit = { "vale" },
+				mail = { "vale" },
+				javascript = { "eslint" },
+				typescript = { "eslint" },
+				ruby = { "standardrb" },
+			}
+			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+				callback = function()
+					require("lint").try_lint()
+				end,
+			})
+		end,
+	},
 	{ -- Autoformat
 		"stevearc/conform.nvim",
 		event = { "BufWritePre" },
@@ -364,7 +385,7 @@ require("lazy").setup({
 			},
 		},
 		opts = {
-			notify_on_error = true,
+			notify_on_error = false,
 			format_on_save = function(bufnr)
 				-- Disable "format_on_save lsp_fallback" for languages that don't
 				-- have a well standardized coding style. You can add additional
@@ -383,8 +404,10 @@ require("lazy").setup({
 			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
-				ruby = {},
-				javascript = { "standardjs", stop_after_first = true },
+				ruby = { "standardrb" },
+				eruby = { "htmlbeautifier" },
+				javascript = { "prettier", stop_after_first = true },
+				typescript = { "prettier", stop_after_first = true },
 			},
 		},
 	},
@@ -395,7 +418,7 @@ require("lazy").setup({
 			"nvim-tree/nvim-web-devicons",
 		},
 		config = function()
-			vim.keymap.set("n", "<leader>n", ":NvimTreeToggle<cr>")
+			vim.keymap.set("n", "<leader>n", ":NvimTreeFindFileToggle<cr>")
 			require("nvim-tree").setup({})
 		end,
 	},
@@ -491,10 +514,9 @@ require("lazy").setup({
 }, {})
 
 --[[Global options]]
-vim.g.neoterm_autoinsert = 1
-vim.g.neoterm_default_mod = "botright"
 vim.g["test#strategy"] = "vimux"
 vim.g["test#preserve_screen"] = false
+-- vim.g["test#javascript#vitest#options"] = "--inspect-brk --pool forks --poolOptions.forks.singleFork"
 
 vim.opt.cmdheight = 1
 
@@ -656,7 +678,7 @@ vim.keymap.set("n", "<leader>f", function()
 	require("telescope.builtin").find_files({ hidden = false })
 end, { desc = "[F]iles" })
 vim.keymap.set("n", "<leader>F", function()
-	require("telescope.builtin").find_files({ no_ignore = true, hidden = true })
+	require("telescope.builtin").find_files({ no_ignore = false, hidden = true })
 end, { desc = "[F]iles" })
 vim.keymap.set("n", "<leader>h", require("telescope.builtin").help_tags, { desc = "[H]elp" })
 vim.keymap.set("n", "<leader>w", require("telescope.builtin").grep_string, { desc = "[W]ord" })
@@ -742,6 +764,13 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- Diagnostic keymaps
+vim.diagnostic.config({
+	virtual_text = true,
+	signs = true,
+	underline = true,
+	update_in_insert = false,
+	severity_sort = true,
+})
 vim.keymap.set("n", "[d", function()
 	vim.diagnostic.jump({ count = 1, float = true })
 end, { desc = "Go to previous diagnostic message" })

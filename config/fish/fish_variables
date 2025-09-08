@@ -53,4 +53,4 @@ SETUVAR fish_pager_color_selected_background:\x2d\x2dbackground\x3dbrblack
 SETUVAR fish_pager_color_selected_completion:\x1d
 SETUVAR fish_pager_color_selected_description:\x1d
 SETUVAR fish_pager_color_selected_prefix:\x1d
-SETUVAR fish_user_paths:/usr/local/opt/mongodb\x2dcommunity\x404\x2e2/bin\x1e/Users/kevin/\x2eyarn/bin
+SETUVAR fish_user_paths:/Users/kevin/\x2eopencode/bin\x1e/opt/homebrew/opt/libpq/bin\x1e/opt/homebrew/opt/mysql\x2dclient/bin\x1e/opt/homebrew/opt/curl/bin\x1e/usr/local/opt/mongodb\x2dcommunity\x404\x2e2/bin\x1e/Users/kevin/\x2eyarn/bin

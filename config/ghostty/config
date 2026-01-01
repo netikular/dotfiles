@@ -1,0 +1,32 @@
+# Theme
+theme = tokyonight
+
+# Options
+link-url = true
+macos-option-as-alt = true
+confirm-close-surface = false
+window-decoration = false
+
+# Font
+font-thicken = true
+# font-family = "Monaco Nerd Font"
+font-family = "Monaco"
+# font-family = "JetBrainsMono"
+# font-family = "MesloLGS Nerd Font Mono"
+font-style = Regular
+font-size = 16
+
+# Keybinds
+keybind = global:shift+alt+ctrl+cmd+p=toggle_quick_terminal
+
+
+# Playground - place to add new configs to see what happens.
+# quick-terminal-size = 25%
+adjust-cursor-thickness = 25%
+
+# quick-terminal-position = center
+quick-terminal-animation-duration = 0
+quick-terminal-autohide=false
+
+unfocused-split-opacity = 0.9
+quit-after-last-window-closed=true

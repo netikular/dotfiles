@@ -57,6 +57,20 @@ key-mapping.preset = 'qwerty'
 on-focus-changed = ['move-mouse window-lazy-center']
 
 [[on-window-detected]]
+    if.app-id = 'org.alacritty'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.mitchellh.ghostty'
+    if.window-title-regex-substring = 'harvest_cli'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.window-title-regex-substring = 'Music'
+    run = 'layout floating'
+
+
+[[on-window-detected]]
     if.app-id = 'com.apple.Preview'
     run = 'move-node-to-workspace D'  # The callback itself
 

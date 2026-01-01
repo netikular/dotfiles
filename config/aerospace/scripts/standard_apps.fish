@@ -5,7 +5,7 @@ source "/Users/kevin/.config/aerospace/scripts/functions.fish"
 say "starting apps"
 
 aerospace workspace S
-launch Music
+launch "Jellyfin Media Player"
 aerospace workspace T
 launch Ghostty
 aerospace workspace B

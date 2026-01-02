@@ -1,2 +1,0 @@
-EXCLUDES="installation README.md LICENSE extras"
-DOTFILES_DIRS="$HOME/dotfiles"

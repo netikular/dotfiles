@@ -1,6 +1,6 @@
 # My Fish Config
 if status --is-interactive
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  # eval "$(/opt/homebrew/bin/brew shellenv)"
 
   if set -q NVIM_LISTEN_ADDRESS
     set -x VISUAL "nvr -cc split --remote-wait +'set bufhidden=wipe'"
@@ -22,24 +22,9 @@ if status --is-interactive
   ulimit -n 4096
 
   set -x CFLAGS "-O2 -g -fno-stack-check"
-  set -x KERL_CONFIGURE_OPTIONS "--disable-hipe --without-javac --with-ssl=/opt/homebrew/opt/openssl@1.1"
-  set -x RUBY_CONFIGURE_OPTS "--with-openssl-dir=/opt/homebrew/opt/openssl@3"
-  set -x PKG_CONFIG_PATH "/opt/homebrew/opt/libpq/lib/pkgconfig"
-
-  # The next line updates PATH for the Google Cloud SDK.
-  if [ -f '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc' ]; . '/Users/kevin/Downloads/google-cloud-sdk/path.fish.inc'; end
-
-  # if test -e $HOME"/.asdf/asdf.fish"
-  #   source ~/.asdf/asdf.fish
-  # end
-
-  if test -e $HOME"/.env.local.fish"
-    source $HOME"/.env.local.fish"
-  end
-
-  /Users/kevin/.local/bin/mise activate fish | source
-
-  # eval (direnv hook fish)
+  # set -x KERL_CONFIGURE_OPTIONS "--disable-hipe --without-javac --with-ssl=/opt/homebrew/opt/openssl@1.1"
+  # set -x RUBY_CONFIGURE_OPTS "--with-openssl-dir=/opt/homebrew/opt/openssl@3"
+  # set -x PKG_CONFIG_PATH "/opt/homebrew/opt/libpq/lib/pkgconfig"
 
   atuin init fish | source
 
@@ -48,35 +33,12 @@ if status --is-interactive
 end
 
 # Variables
-set -x LC_ALL "en_CA.UTF-8"
 set -x EDITOR nvim
 set -x VISUAL nvim
-set -x VAGRANT_DEFAULT_PROVIDER vmware_fusion
-set -x PATH $HOME/.cache/rebar3/bin:$PATH
-set -x PATH /opt/homebrew/Cellar/bash/5.2.32/bin $PATH
-set -x PATH $HOME/local/nvim/bin $PATH
-set -x PATH $HOME/bin $PATH
-set -x PATH $HOME/.local/bin $PATH
-set -x PATH $HOME/local/bin $PATH
-set -x PATH $HOME/go/bin $PATH
-set -x PATH $HOME/.cargo/bin $PATH
-set -x PATH /opt/homebrew/opt/postgresql@15/bin $PATH
-set -x PATH /Applications/Ghostty.app/Contents/MacOS $PATH
 set -x MANPATH $MANPATH /usr/local/opt/erlang/lib/erlang/man
 set -x TERM xterm-ghostty
 # set -x TERM screen-256color
-set -x HOMEBREW_NO_AUTO_UPDATE 1
 set -x XDG_CONFIG_HOME ~/.config
-fish_add_path /opt/homebrew/opt/curl/bin
-fish_add_path /opt/homebrew/opt/mysql-client/bin
-fish_add_path /opt/homebrew/opt/libpq/bin
-
-# set -gx LDFLAGS "-L/opt/homebrew/opt/mysql-client/lib"
-# set -gx CPPFLAGS "-I/opt/homebrew/opt/mysql-client/include"
-
-# bun
-set --export BUN_INSTALL "$HOME/.bun"
-set --export PATH $BUN_INSTALL/bin $PATH
 
 zoxide init fish | source
 
@@ -145,6 +107,7 @@ end
 
 # opencode
 fish_add_path /Users/kevin/.opencode/bin
+fish_add_path /home/kevin/.local/share/gem/ruby/3.4.0/bin
 
 # Added by LM Studio CLI (lms)
 set -gx PATH $PATH /Users/kevin/.lmstudio/bin
@@ -179,3 +142,4 @@ function dev_issue
   set title (gh issue view $issue --jq .title --json title)
   harvest_cli -t $issue -n "$title"
 end
+/home/kevin/.local/bin/mise activate fish | source

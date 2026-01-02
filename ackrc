@@ -1,7 +1,0 @@
---type-set=puppet:ext:pp
---type-set=html:ext:ejs
---ignore-dir=log
---ignore-dir=.sql
---ignore-dir=*moment*
---known-types
-

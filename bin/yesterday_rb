@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require "date"
-1.upto(5) do |x|
+1.upto(40) do |x|
   file_name = "#{Date.today - x}.md"
   if File.exist?(file_name)
     print file_name

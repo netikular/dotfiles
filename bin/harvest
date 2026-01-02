@@ -1,0 +1,164 @@
+#!/usr/bin/env ruby
+class Harvest
+  class API
+    include HTTParty
+    base_uri "https://api.harvestapp.com"
+
+    def headers
+      {
+        "User-Agent" => "Httparty",
+        "Authorization" => "Bearer #{@token}",
+        "Harvest-Account-ID" => @account_id
+      }
+    end
+
+    attr_accessor :account_id
+
+    def initialize(token, account_id)
+      @token = token
+      @account_id = account_id
+    end
+
+    def get(path, params = {})
+      self.class.get(build_path(path, params), {headers:})
+    end
+
+    def patch(path)
+      self
+        .class
+        .patch(build_path(path, {}), {
+          headers: headers.merge({"Content-Type": "application/json"})
+        })
+    end
+
+    def post(path, params = {})
+      self
+        .class
+        .post(build_path(path, {}), {
+          body: params.to_json,
+          headers: headers.merge({"Content-Type": "application/json"})
+        })
+    end
+
+    def delete(path)
+      self.class.delete(path, {headers:})
+    end
+
+    def update(path, params)
+      self
+        .class
+        .patch(path, {
+          body: params.to_json,
+          headers: headers.merge({"Content-Type": "application/json"})
+        })
+    end
+
+    def build_path(path, params)
+      [path, params.to_query]
+        .compact_blank
+        .join("?")
+    end
+  end
+
+  class Base
+    attr_accessor :api, :attributes
+
+    def initialize(attributes, api)
+      @attributes = attributes
+      @api = api
+    end
+
+    delegate :account_id, to: :api
+
+    def method_missing(value)
+      @attributes[value.to_s]
+    rescue NoMethodError => e
+      puts "**#{value}**"
+      puts self.class
+      raise e
+    end
+
+    def respond_to_missing?(value, _include_all)
+      @attributes.key?(value.to_s)
+    end
+  end
+
+  class Client < Base
+    def self.all(api)
+      api.get("/v2/clients").map do |c|
+        Client.new(c, api)
+      end
+    end
+
+    def self.find(id, api)
+      Client.new(api.get("/v2/clients/#{id}"), api)
+    end
+
+    def projects
+      api.get("/v2/projects?client_id=#{id}")
+        .fetch("projects")
+        .map { |p| Project.new(p, api) }
+    end
+  end
+
+  class Project < Base
+    def self.find(id)
+      Project.new(api.get("/v2/projects/#{id}"), api)
+    end
+
+    def self.all(api)
+      api.get("/v2/projects")
+        .fetch("projects")
+        .map { |p| Project.new(p, api) }
+    end
+
+    def get(params)
+      api.get("/v2/time_entries", params)
+        .fetch("time_entries")
+        .map { |t| TimeEntry.new(t, api) }
+    end
+
+    def client
+      Client.new(@attributes["client"])
+    end
+
+    def time_entries
+      get({project_id: id})
+    end
+
+    def recent_changes(updated_since)
+      get({project_id: id, updated_since:})
+    end
+  end
+
+  class TimeEntry < Base
+    def self.create(attributes, api)
+      raw_json = api.post("/v2/time_entries", attributes)
+
+      raise raw_json["message"] if raw_json["message"].present?
+
+      TimeEntry.new(raw_json, api)
+    end
+
+    def self.update(id, attributes, api)
+      api.update("/v2/time_entries/#{id}", attributes)
+    end
+
+    def self.get(id, api)
+      t = api.get("/v2/time_entries/#{id}")
+      TimeEntry.new(t, api)
+    end
+
+    def self.restart(id, api)
+      api.patch("/v2/time_entries/#{id}/restart")
+    end
+
+    def self.stop(id, api)
+      api.patch("/v2/time_entries/#{id}/stop")
+    end
+  end
+end
+
+api = Harvest::API.new(ENV["HARVEST_TOKEN"], ENV["HARVEST_ACCOUNT_ID"])
+
+pp Client.all(api)

@@ -10,4 +10,14 @@ for session in $sessions
     echo $pane
     tmux send-keys -t $pane C-\[ ':qa' Enter
   end
+
+  set windows $(tmux list-windows -t $session | awk '{print $1 " " $2}' )
+  for window in $windows
+    set parts $(string split : $window)
+    set pane $session:$parts[1].1
+    echo $pane
+    tmux send-keys -t $pane C-c
+    tmux send-keys -t $pane C-d
+  end
+
 end

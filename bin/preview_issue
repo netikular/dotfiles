@@ -1,0 +1,9 @@
+#!/usr/bin/env fish
+
+set issue $argv[1]
+
+if test -z "$issue"
+    echo "It's empty!"
+else
+  gh issue view $issue
+end

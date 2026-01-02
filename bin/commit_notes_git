@@ -3,4 +3,4 @@
 git add .
 git commit -m "$(date +"%Y-%m-%d %H:%M")"
 git push origin main --force-with-lease
-say -v Zarvox "Your notes are safe with me"
+# say -v Zarvox "Your notes are safe with me"

@@ -67,7 +67,7 @@
 [user]
   name = Kevin Pratt
   email = kevin@paradem.co
-  signingkey = /Users/kevin/.ssh/id_rsa.pub
+  signingkey = /home/kevin/.ssh/id_rsa.pub
 [gpg]
   format = ssh
 [commit]

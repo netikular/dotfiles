@@ -370,31 +370,31 @@ require("lazy").setup({
       })
     end,
   },
-  -- { -- Autoformat
-  --   "stevearc/conform.nvim",
-  --   event = { "BufWritePre" },
-  --   cmd = { "ConformInfo" },
-  --   keys = {
-  --     {
-  --       "<leader>x",
-  --       function()
-  --         require("conform").format({ async = true, lsp_format = "fallback" })
-  --       end,
-  --       mode = "",
-  --       desc = "[F]ormat buffer",
-  --     },
-  --   },
-  --   opts = {
-  --     notify_on_error = false,
-  --     formatters_by_ft = {
-  --       lua = { "stylua" },
-  --       ruby = { "standardrb" },
-  --       eruby = { "htmlbeautifier" },
-  --       javascript = { "prettier", stop_after_first = true },
-  --       typescript = { "prettier", stop_after_first = true },
-  --     },
-  --   },
-  -- },
+  { -- Autoformat
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    keys = {
+      {
+        "<leader>x",
+        function()
+          require("conform").format({ async = true, lsp_format = "fallback" })
+        end,
+        mode = "",
+        desc = "[F]ormat buffer",
+      },
+    },
+    opts = {
+      notify_on_error = false,
+      formatters_by_ft = {
+        lua = { "stylua" },
+        ruby = { "standardrb" },
+        eruby = { "htmlbeautifier" },
+        javascript = { "prettier", stop_after_first = true },
+        typescript = { "prettier", stop_after_first = true },
+      },
+    },
+  },
   {
     "nvim-tree/nvim-tree.lua",
     version = "*",

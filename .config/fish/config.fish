@@ -30,6 +30,10 @@ if status --is-interactive
 
   oh-my-posh init fish --config ~/.config/zen.toml | source
 
+  if test -e $HOME"/.env.local.fish"
+    source $HOME"/.env.local.fish"
+  end
+
 end
 
 # Variables
@@ -106,11 +110,12 @@ if status is-interactive
 end
 
 # opencode
-fish_add_path /Users/kevin/.opencode/bin
-fish_add_path /home/kevin/.local/share/gem/ruby/3.4.0/bin
+fish_add_path /home/kevin/bin
+fish_add_path /home/kevin/.fly/bin
+# fish_add_path /home/kevin/.local/share/gem/ruby/3.4.0/bin
 
 # Added by LM Studio CLI (lms)
-set -gx PATH $PATH /Users/kevin/.lmstudio/bin
+# set -gx PATH $PATH /Users/kevin/.lmstudio/bin
 # End of LM Studio CLI section
 
 # Best way to get these functions installed into all fish sessions

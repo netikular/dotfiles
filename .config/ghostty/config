@@ -10,13 +10,13 @@ window-decoration = false
 
 # Font
 font-thicken = true
-# font-family = "Monaco Nerd Font"
-# font-family = "Monaco"
-# font-family = "JetBrains Mono NF"
-font-family = "JetBrainsMono Nerd Font"
-# font-family = "MesloLGS Nerd Font Mono"
+# font-family = "Adwaita Mono"
+font-family = "Adwaita Mono"
+# font-family = "Adwaita Mono"
+# font-family = "Adwaita Mono"
+# font-family = "Adwaita Mono"
 font-style = Regular
-font-size = 14
+font-size = 13
 
 # Keybinds
 keybind = global:shift+alt+ctrl+cmd+p=toggle_quick_terminal

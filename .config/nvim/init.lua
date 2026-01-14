@@ -141,8 +141,8 @@ require("lazy").setup({
       ---@param url string
       follow_url_func = function(url)
         -- Open the URL in the default web browser.
-        -- vim.fn.jobstart({ "open", url }) -- Mac OS
-        vim.fn.jobstart({ "xdg-open", url }) -- linux
+        vim.fn.jobstart({ "open", url }) -- Mac OS
+        -- vim.fn.jobstart({"xdg-open", url})  -- linux
         -- vim.cmd(':silent exec "!start ' .. url .. '"') -- Windows
         -- vim.ui.open(url) -- need Neovim 0.10.0+
       end,
@@ -291,7 +291,7 @@ require("lazy").setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- gopls = {},
+        gopls = {},
         ts_ls = {},
         -- One of these will be the one.....
         -- standardrb = {},
@@ -386,6 +386,22 @@ require("lazy").setup({
     },
     opts = {
       notify_on_error = false,
+      format_on_save = function(bufnr)
+        -- Disable "format_on_save lsp_fallback" for languages that don't
+        -- have a well standardized coding style. You can add additional
+        -- languages here or re-enable it for the disabled ones.
+        local disable_filetypes = { c = true, cpp = true }
+        local lsp_format_opt
+        if disable_filetypes[vim.bo[bufnr].filetype] then
+          lsp_format_opt = "never"
+        else
+          lsp_format_opt = "fallback"
+        end
+        return {
+          timeout_ms = 1000,
+          lsp_format = lsp_format_opt,
+        }
+      end,
       formatters_by_ft = {
         lua = { "stylua" },
         ruby = { "standardrb" },
@@ -471,75 +487,14 @@ require("lazy").setup({
     end,
   },
   {
+    -- Highlight, edit, and navigate code
     "nvim-treesitter/nvim-treesitter",
-    branch = "main", -- Ensure you're on the main branch
-    build = ":TSUpdate",
-    opts = {
-      -- Your configuration options here
-      highlight = { enable = true },
-      indent = { enable = true },
-      auto_install = true,
-      ensure_installed = { "lua", "vim", "javascript" },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter-textobjects",
     },
-    auto_install = true,
-
-    highlight = { enable = true },
-    indent = { enable = true, disable = { "python" } },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "<c-space>",
-        node_incremental = "<c-space>",
-        scope_incremental = "<c-s>",
-        node_decremental = "<M-space>",
-      },
-    },
-    textobjects = {
-      select = {
-        enable = true,
-        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-        keymaps = {
-          -- You can use the capture groups defined in textobjects.scm
-          ["aa"] = "@parameter.outer",
-          ["ia"] = "@parameter.inner",
-          ["af"] = "@function.outer",
-          ["if"] = "@function.inner",
-          ["ac"] = "@class.outer",
-          ["ic"] = "@class.inner",
-          ["al"] = "@block.outer",
-          ["il"] = "@block.inner",
-        },
-      },
-      move = {
-        enable = true,
-        set_jumps = true, -- whether to set jumps in the jumplist
-        goto_next_start = {
-          ["]m"] = "@function.outer",
-          ["]]"] = "@class.outer",
-        },
-        goto_next_end = {
-          ["]M"] = "@function.outer",
-          ["]["] = "@class.outer",
-        },
-        goto_previous_start = {
-          ["[m"] = "@function.outer",
-          ["[["] = "@class.outer",
-        },
-        goto_previous_end = {
-          ["[M"] = "@function.outer",
-          ["[]"] = "@class.outer",
-        },
-      },
-      swap = {
-        enable = true,
-        swap_next = {
-          ["<leader>a"] = "@parameter.inner",
-        },
-        swap_previous = {
-          ["<leader>A"] = "@parameter.inner",
-        },
-      },
-    },
+    config = function()
+      pcall(require("nvim-treesitter.install").update({ with_sync = true }))
+    end,
   },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -738,6 +693,75 @@ vim.keymap.set("n", "<leader>b", require("telescope.builtin").buffers, { desc = 
 vim.keymap.set("n", "<leader>z", require("telescope.builtin").treesitter, { desc = "[B]uffers" })
 vim.keymap.set("n", "<leader>r", require("telescope.builtin").treesitter, { desc = "[B]uffers" })
 vim.keymap.set("n", "<leader>l", "<cmd>Telescope resume<cr>", {})
+
+-- [[ Configure Treesitter ]]
+-- See `:help nvim-treesitter`
+require("nvim-treesitter.configs").setup({
+  -- Add languages to be installed here that you want installed for treesitter
+  ensure_installed = { "diff", "lua", "vim", "ruby", "heex", "eex", "elixir", "bash" },
+  --'rust', 'tsx', 'typescript', 'help', 'vim', 'elixir',
+
+  -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
+  auto_install = true,
+
+  highlight = { enable = true },
+  indent = { enable = true, disable = { "python" } },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "<c-space>",
+      node_incremental = "<c-space>",
+      scope_incremental = "<c-s>",
+      node_decremental = "<M-space>",
+    },
+  },
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+      keymaps = {
+        -- You can use the capture groups defined in textobjects.scm
+        ["aa"] = "@parameter.outer",
+        ["ia"] = "@parameter.inner",
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+        ["al"] = "@block.outer",
+        ["il"] = "@block.inner",
+      },
+    },
+    move = {
+      enable = true,
+      set_jumps = true, -- whether to set jumps in the jumplist
+      goto_next_start = {
+        ["]m"] = "@function.outer",
+        ["]]"] = "@class.outer",
+      },
+      goto_next_end = {
+        ["]M"] = "@function.outer",
+        ["]["] = "@class.outer",
+      },
+      goto_previous_start = {
+        ["[m"] = "@function.outer",
+        ["[["] = "@class.outer",
+      },
+      goto_previous_end = {
+        ["[M"] = "@function.outer",
+        ["[]"] = "@class.outer",
+      },
+    },
+    swap = {
+      enable = true,
+      swap_next = {
+        ["<leader>a"] = "@parameter.inner",
+      },
+      swap_previous = {
+        ["<leader>A"] = "@parameter.inner",
+      },
+    },
+  },
+})
 
 -- Diagnostic keymaps
 vim.diagnostic.config({

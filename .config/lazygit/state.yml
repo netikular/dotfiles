@@ -1,0 +1,12 @@
+lastupdatecheck: 0
+recentrepos:
+    - /home/kevin/dotfiles
+startuppopupversion: 5
+didshowhunkstaginghint: false
+lastversion: 0.58.0
+customcommandshistory:
+    - q
+    - wq
+    - g rebase --abort
+    - git push --tags
+hidecommandlog: false
